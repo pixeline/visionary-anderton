@@ -1,0 +1,49 @@
+{
+  "name": "Anderton Extension",
+  "version": "1.2",
+  "manifest_version": 2,
+  "description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
+  "homepage_url": "http://colour-blindness.org/",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "storage"    
+  ],
+  "default_locale": "en",
+  "background": {
+    "scripts": ["src/bg/background.js"],
+    "persistent": true
+  },
+  "browser_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "browser action demo",
+    "default_popup": "index.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*", "http://*/*"
+      ],
+      "css": [
+        "src/contentscript/inject.css",
+        "css/style.css"
+      ]
+    },
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": [
+        "js/jquery/jquery.min.js",
+        "js/notify.min.js",
+        "src/contentscript/mutagen.js",
+        "js/Vibrant.js",
+        "js/color-thief.min.js"
+      ]
+    }
+  ]
+}
