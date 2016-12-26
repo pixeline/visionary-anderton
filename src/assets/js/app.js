@@ -78,5 +78,25 @@ $(document).ready(function(){
 		}
 	});
 
+
+	//
+	initReportTool();
+
 });
+
+// Report tool
+function initReportTool() {
+	// capture button
+	$("#capture-desktop").on("click", function(e){
+		e.preventDefault();
+
+		chrome.tabs.captureVisibleTab(null, {format: "png" }, function(dataUrl) {
+        	// image captured as base64
+            console.log(dataUrl)
+            // [TODO] Draw on a canvas 
+            // [TODO] Crop image 
+        })
+	})
+}
+
 

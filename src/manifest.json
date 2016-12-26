@@ -11,8 +11,12 @@
   },
   "permissions": [
     "contextMenus",
+    "declarativeContent",
+    "<all_urls>",
     "tabs",
-    "storage"    
+    "storage",
+    "http://*/*",
+    "https://*/*"    
   ],
   "default_locale": "en",
   "background": {
