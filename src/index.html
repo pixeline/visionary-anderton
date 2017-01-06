@@ -6,56 +6,59 @@
       <link rel="stylesheet" href="assets/css/app.css">
 </head>
 
-<body>
-  <div class="Formlogin">
-    <div class="Formlogin-triangle"></div>
-    <h1 class="Formlogin-header">
-      <img src="src/browser_action/icon48.png"  style="width:30px;height:30px;">Visionary
-    </h1>
+<body class="ui-wrapper voice">
+	
+	<header class="app-header">
+		<h1><img src="assets/images/logo.svg" alt="Visionary"></h1>
+		<h2 class="voice voice--discreete">Adapte le contraste des couleurs pour les daltoniens.</h2>
+	</header>
+	
+	<main>
+		<div id="login-form">
+			<h1 class="ui-title">Login</h1>
+			<form action="#" class="pure-form pure-form-stacked">
+				<fieldset>
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-sm-2-5">
+							<label for="email">Votre email</label>
+							<input id="email" class="pure-u-23-24" type="email" placeholder="email">
+						</div>
+						
+						<div class="pure-u-1 pure-u-sm-2-5">
+							<label for="email">Mot de passe <a href="#" class="js-forgotten-password-link">oublié?</a></label>
+							<input id="email" class="pure-u-23-24" type="password" placeholder="mot de passe">
+						</div>
+						
+						<div class="pure-u-1 pure-u-sm-1-5">
+							<label>&nbsp;</label>
+							<button type="submit" class="pure-u-23-24 pure-button pure-button-primary js-submit-login">Connexion</button>
+						</div>
+					</div>
+	        </fieldset>
+		  </form>
+		  
+		  <p class="text-center" >ou via votre compte </p>
 
-    <h2 class="Formlogin-header">
-      <ul class="menu">
-        <a href="#connexion" class="btn-connexion"><h2>SIGN IN</h2></a>
-        <a href="https://dev.colour-blindness.org/" class="btn-enregistrer active"><h2>SIGN UP</h2></a>
-      </ul>
-    </h2>
-
-    <form id="FormLogin" class="Formlogin-container">
-      <p><span>Username:</span><input id="login" type="email" placeholder="Email" name="uname" required></p>
-      <p><span>Password:</span><input id="pwd" type="password" placeholder="Password" name="psw"></p>
-      <h3 class="Formlogin-header">
-        <p> Which elements do you want to filter out?</p>
-      </h3>
-      
-      <div id="pluginsForm" >
-        <div class="squaredOne">
-            <input checked="checked" type="checkbox" value="Everything" id="squaredOne" name="check" />
-            <label for="squaredOne"><span>Everything</span></label>
-        </div>
-        <div class="squaredOne">
-            <input type="checkbox" value="Images" id="squaredTwo" name="check" />
-            <label for="squaredTwo"><span>Images</span></label>
-        </div>
-        <div class="squaredOne">
-            <input type="checkbox" value="Paragraphs" id="squaredThree" name="check" />
-            <label for="squaredThree"><span>Paragraphs</span></label>
-        </div>
-      </div>
-
-      <table>
-        <tr>
-            <td>
-                <input id="signin" type="submit" class="InputFormlogin" value="Log in">
-            </td>
-            <td>
-                <input id="signoff" type="submit" class="InputFormlogin" value="Log out">    
-            </td>
-        </tr>
-      </table>
-    </form>
-  </div>
-
-  
+		<form id="register-auth" action="/register-auth" method="POST" class="text-center">			  
+			<button type="submit" name="auth" value="facebook" class="link button-facebook">
+				<i class="fa fa-facebook fa-5x" aria-hidden="true"></i>
+			</button>
+			
+			<button type="submit" name="auth" value="google" class="link button-google">
+				<i class="fa fa-google fa-5x" aria-hidden="true"></i> 
+			</button>
+			<button type="submit" name="auth" value="twitter" class="link button-twitter">
+				<i class="fa fa-twitter fa-5x" aria-hidden="true"></i> 
+			</button>
+		</form>
+		
+		<p class="text-center"><a href="#" class="js-register-link">Pas encore de compte?</a></p>
+		  
+	  </div>
+	 </main> 
+<footer class="app-footer voice--discreete">
+	<p><a href="//colour-blindness.org" class="no-underline">colour-blindness.org</a> - version <span class="js-version-number">1.2.3</span></p>
+</footer>
   <script src='assets/js/vendors/jquery-3.1.1.min.js'></script>
   <script src='assets/js/app.js'></script>
   

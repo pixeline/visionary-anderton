@@ -8,7 +8,7 @@ html {
 }
 
 /* ---------------------------------------------- 
-	BASICS 
+	TYPOGRAPHIC BASIS 
 ---------------------------------------------- */
 html{
 	font-size:$base-font-size;
@@ -16,8 +16,7 @@ html{
 }
 body {
 	font-family: $font-sans;
-//	font-weight: lighter;
-font-size:1rem;
+	font-size:1rem;
 	background-color:$background-grey;
 	color:$text-black;
 }
@@ -35,10 +34,7 @@ u,.underline{
 	// Pretty underlines
     @include link-underline($white, $text-black, $color-selection);
 }
-h1,h2,h3{
-	font-family: $font-serif;
-	font-weight:normal;
-}
+
 
 p {
 	margin-bottom:1rem;
@@ -48,33 +44,54 @@ strong {
     font-weight: bolder;
 }
 fieldset{
-	border-color: $light-grey;
+	border: none;
 }
 select{
 	width:auto;
-	max-width:200px; //to make sure select boxes stay inside their container
+	max-width:100%; //to make sure select boxes stay inside their container
 }
 
-footer{
-	border-top:1px solid $light-grey;
-	margin-top:3rem;
-	opacity:.5;
-	transition: all 0.2s ease;
-	text-align: center;
-	p{
-		color:$grey;
+/* ---------------------------------------------- 
+	THE VOICE
+	// this class set is used to convey specific expressions in a coherent, global system: the voice of your application. 
+---------------------------------------------- */
+
+.voice{
+	font-size:100%;
+	font-family: $font-sans;
+	&--info{
+		background-color:#FFFFDD;
 	}
-	&:hover{
-		opacity:1;
+	&--loud{
+		font-size:133%;
+	}
+	&--discreete{
+		opacity:.8;
+		font-size:89%;
+	}
+	&--whisper{
+		font-size:72%;
+		opacity:.6;
+	}
+	&--error{
+		color: $red;
+		font-weight: bold;
 	}
 }
 
-// HELPERS
-// quick fix classes
-.content {
-	padding-top:30px;
-	padding-bottom:30px;
+.feedback{
+	background:#FFFFDD;
+	border-left:2px solid $blue;
+	padding:.2rem 1rem;
+	&--error{
+		border-left-color:$red;
+	}
 }
+
+/* ---------------------------------------------- 
+	HELPERS
+	// quick fix classes 
+---------------------------------------------- */
 
 .hide {
     display: none;
@@ -101,30 +118,19 @@ footer{
     text-align: right;
 }
 
-.pull-left {
+.float-left {
     float: left;
 }
-.pull-right {
-    float: left;
+.float-right {
+    float: right;
 }
-.offst-top-20 {
-    padding-top: 16px;
-}
-.inner-row {
-    padding: 0 14px;
-}
-
 .no-underline{
   background-size:0px !important;
 }
 
 // OVERWRITE SOME PURE-CSS
 .pure-menu-item{height:auto;}
-/*
-.pure-form-stacked label{
-	margin-top:1em;
-}
-*/
+
 a.pure-button-primary{
 	background-color:$blue;
 	color:white;
@@ -141,10 +147,6 @@ a.pure-button-primary{
 /* ---------------------------------------------- 
 	BUTTONS & CALLS TO ACTION 
 ---------------------------------------------- */
-.logo-home{
-	background:transparent;
-	text-align:center;
-}
 .pure-button,
 .pure-button-primary,
 .button-primary,
@@ -153,7 +155,7 @@ a.pure-button-primary{
 	border-radius: 4px;
 	text-shadow: none;
 	font-weight: 300;
-	padding:8px 25px 6px;
+
 	transition: background-color 0.2s ease;
 	&:hover,
 	&:active,
@@ -188,7 +190,6 @@ a.pure-button-primary{
 .button-secondary {
 	border:none;
     background: transparent;
-   //  font-size: 92%;
      color:$blue;
      text-shadow: none;
      padding:.5rem 1rem;
@@ -212,114 +213,90 @@ a.pure-button-primary{
     display: inline-block;
     border: none;
     background: none;
-	color : #0277BD;
+	color:$grey;
 	text-decoration : underline;
 	outline : 0;
+	font-size:200%;
+	&:hover{
+			
+	}
 }
-.btn-block { display:block; width:100%; }
+
 .button-social {
-	background-color: #0277BD;
+	background-color: $blue;
     border-radius: 4px;
     text-shadow: none;
-    font-weight: 300;
     padding: 8px 25px 6px;
-    -webkit-transition: background-color 0.2s ease;
     transition: background-color 0.2s ease;
     border: 0 transparent;
     color: #fff;
+    font-size:200%;
 }
 .button-facebook {
-	background : $color-facebook;
+	
 	&:hover {
-		background : darken($color-facebook, 25%);
+		color: $color-facebook;
 	}
 } 
 .button-twitter {
-	background : $color-twitter;
+	
 	&:hover {
-		background : darken($color-twitter, 25%);
+		color : $color-twitter;
 	}
 } 
 .button-google {
-	background : $color-google;
+	
 	&:hover {
-		background : darken($color-google, 25%);
+		color : $color-google;
 	}
 }
-.button-email {
-	background : darken($white, 10%);
-	color:#333;
-	&:hover {
-		background : darken($white, 25%);
-		color:#000;
-	}
-} 
+
+
 
 /* ---------------------------------------------- 
-	THE VOICE
-	// this class set is used to convey specific expressions in a coherent, global system: the voice of your application. 
+	INTERFACE CANVAS
 ---------------------------------------------- */
-
-.voice{
-	font-size:100%;
-	font-family: $font-sans !important;
-	&--info{
-		background-color:#FFFFDD;
-	}
-	&--loud{
-		font-size:133%;
-	}
-	&--discreete{
-		opacity:.8;
-		font-size:88%;
-	}
-	&--whisper{
-		font-size:72%;
-		opacity:.6;
-	}
-	&--error{
-		color: $red;
-		font-weight: bold;
+.ui-wrapper {
+	margin:10px;
+	max-width:640px;
+	background-color: $lightest-grey;
+	border:1px solid $light-grey;
+}
+header.app-header{
+	text-align: center;
+	padding:10px;
+	h1,h2{
+		line-height: 1.2;
+		margin:0;
+		padding:0 0 10px;
+		font-weight: normal;
 	}
 }
-
-.feedback{
-	background:#FFFFDD;
-	border-left:2px solid $blue;
-	padding:.2rem 1rem;
-	&--error{
-		border-left-color:$red;
-	}
+.ui-tagline{
+	text-align:center;
+	font-size: 89%;
+	
 }
-/* ---------------------------------------------- 
-	INDEX.HTML // START PAGE 
----------------------------------------------- */
-.home, .result {
-	margin:50px 0;
-
-	h1 {
-		text-align: center;
-	}
+.ui-title{
+	text-transform: uppercase;
+	font-weight:lighter;
+	color: $grey;
+	font-family: $font-sans;
+	font-size: 89%;
 }
 main {
 	background-color:white;
-	padding:3rem;
-	border-top:solid 2px $blue;
-	margin-top:3rem;
-	border-radius:3px;
-}
-.center {
-	max-width: 900px;
-	margin:0 auto;
-}
+	padding:1rem 3rem 1rem;
 
-
-.form{
-	border:1px solid $light-grey;
-	border-radius: 5px;
-	padding:0 2rem 2rem;
-	&--register{
-		
+}
+footer.app-footer{
+	text-align: center;
+	padding:10px;
+	*{
+		color: $grey;
+	}
+	a{
+		text-decoration: none;
 	}
 }
 .no-padding { padding : 0; }

@@ -3632,7 +3632,7 @@ html {
   box-sizing: inherit; }
 
 /* ---------------------------------------------- 
-	BASICS 
+	TYPOGRAPHIC BASIS 
 ---------------------------------------------- */
 html {
   font-size: 14px;
@@ -3693,10 +3693,6 @@ u, .underline {
   u:visited, .underline:visited {
     color: #333; }
 
-h1, h2, h3 {
-  font-family: "kepler-std-display", serif;
-  font-weight: normal; }
-
 p {
   margin-bottom: 1rem; }
 
@@ -3704,27 +3700,44 @@ strong {
   font-weight: bolder; }
 
 fieldset {
-  border-color: #DDD; }
+  border: none; }
 
 select {
   width: auto;
-  max-width: 200px; }
+  max-width: 100%; }
 
-footer {
-  border-top: 1px solid #DDD;
-  margin-top: 3rem;
-  opacity: .5;
-  transition: all 0.2s ease;
-  text-align: center; }
-  footer p {
-    color: #AAA; }
-  footer:hover {
-    opacity: 1; }
+/* ---------------------------------------------- 
+	THE VOICE
+	// this class set is used to convey specific expressions in a coherent, global system: the voice of your application. 
+---------------------------------------------- */
+.voice {
+  font-size: 100%;
+  font-family: "jaf-bernino-sans", sans-serif; }
+  .voice--info {
+    background-color: #FFFFDD; }
+  .voice--loud {
+    font-size: 133%; }
+  .voice--discreete {
+    opacity: .8;
+    font-size: 89%; }
+  .voice--whisper {
+    font-size: 72%;
+    opacity: .6; }
+  .voice--error {
+    color: #DD0000;
+    font-weight: bold; }
 
-.content {
-  padding-top: 30px;
-  padding-bottom: 30px; }
+.feedback {
+  background: #FFFFDD;
+  border-left: 2px solid #0277BD;
+  padding: .2rem 1rem; }
+  .feedback--error {
+    border-left-color: #DD0000; }
 
+/* ---------------------------------------------- 
+	HELPERS
+	// quick fix classes 
+---------------------------------------------- */
 .hide {
   display: none;
   opacity: 0; }
@@ -3748,17 +3761,11 @@ footer {
 .text-right {
   text-align: right; }
 
-.pull-left {
+.float-left {
   float: left; }
 
-.pull-right {
-  float: left; }
-
-.offst-top-20 {
-  padding-top: 16px; }
-
-.inner-row {
-  padding: 0 14px; }
+.float-right {
+  float: right; }
 
 .no-underline {
   background-size: 0px !important; }
@@ -3766,11 +3773,6 @@ footer {
 .pure-menu-item {
   height: auto; }
 
-/*
-.pure-form-stacked label{
-	margin-top:1em;
-}
-*/
 a.pure-button-primary {
   background-color: #0277BD;
   color: white; }
@@ -3786,10 +3788,6 @@ a.pure-button-primary {
 /* ---------------------------------------------- 
 	BUTTONS & CALLS TO ACTION 
 ---------------------------------------------- */
-.logo-home {
-  background: transparent;
-  text-align: center; }
-
 .pure-button,
 .pure-button-primary,
 .button-primary,
@@ -3798,7 +3796,6 @@ a.pure-button-primary {
   border-radius: 4px;
   text-shadow: none;
   font-weight: 300;
-  padding: 8px 25px 6px;
   transition: background-color 0.2s ease; }
   .pure-button:hover, .pure-button:active, .pure-button:focus,
   .pure-button-primary:hover,
@@ -3877,98 +3874,70 @@ a.pure-button-primary {
   display: inline-block;
   border: none;
   background: none;
-  color: #0277BD;
+  color: #AAA;
   text-decoration: underline;
-  outline: 0; }
-
-.btn-block {
-  display: block;
-  width: 100%; }
+  outline: 0;
+  font-size: 200%; }
 
 .button-social {
   background-color: #0277BD;
   border-radius: 4px;
   text-shadow: none;
-  font-weight: 300;
   padding: 8px 25px 6px;
-  -webkit-transition: background-color 0.2s ease;
   transition: background-color 0.2s ease;
   border: 0 transparent;
-  color: #fff; }
+  color: #fff;
+  font-size: 200%; }
 
-.button-facebook {
-  background: #3b5998; }
-  .button-facebook:hover {
-    background: #17233c; }
+.button-facebook:hover {
+  color: #3b5998; }
 
-.button-twitter {
-  background: #55acee; }
-  .button-twitter:hover {
-    background: #126db2; }
+.button-twitter:hover {
+  color: #55acee; }
 
-.button-google {
-  background: #dd4b39; }
-  .button-google:hover {
-    background: #802216; }
-
-.button-email {
-  background: #e6e6e6;
-  color: #333; }
-  .button-email:hover {
-    background: #bfbfbf;
-    color: #000; }
+.button-google:hover {
+  color: #dd4b39; }
 
 /* ---------------------------------------------- 
-	THE VOICE
-	// this class set is used to convey specific expressions in a coherent, global system: the voice of your application. 
+	INTERFACE CANVAS
 ---------------------------------------------- */
-.voice {
-  font-size: 100%;
-  font-family: "jaf-bernino-sans", sans-serif !important; }
-  .voice--info {
-    background-color: #FFFFDD; }
-  .voice--loud {
-    font-size: 133%; }
-  .voice--discreete {
-    opacity: .8;
-    font-size: 88%; }
-  .voice--whisper {
-    font-size: 72%;
-    opacity: .6; }
-  .voice--error {
-    color: #DD0000;
-    font-weight: bold; }
+.ui-wrapper {
+  margin: 10px;
+  max-width: 640px;
+  background-color: #F4F4F4;
+  border: 1px solid #DDD; }
 
-.feedback {
-  background: #FFFFDD;
-  border-left: 2px solid #0277BD;
-  padding: .2rem 1rem; }
-  .feedback--error {
-    border-left-color: #DD0000; }
+header.app-header {
+  text-align: center;
+  padding: 10px; }
+  header.app-header h1, header.app-header h2 {
+    line-height: 1.2;
+    margin: 0;
+    padding: 0 0 10px;
+    font-weight: normal; }
 
-/* ---------------------------------------------- 
-	INDEX.HTML // START PAGE 
----------------------------------------------- */
-.home, .result {
-  margin: 50px 0; }
-  .home h1, .result h1 {
-    text-align: center; }
+.ui-tagline {
+  text-align: center;
+  font-size: 89%; }
+
+.ui-title {
+  text-transform: uppercase;
+  font-weight: lighter;
+  color: #AAA;
+  font-family: "jaf-bernino-sans", sans-serif;
+  font-size: 89%; }
 
 main {
   background-color: white;
-  padding: 3rem;
-  border-top: solid 2px #0277BD;
-  margin-top: 3rem;
-  border-radius: 3px; }
+  padding: 1rem 3rem 1rem; }
 
-.center {
-  max-width: 900px;
-  margin: 0 auto; }
-
-.form {
-  border: 1px solid #DDD;
-  border-radius: 5px;
-  padding: 0 2rem 2rem; }
+footer.app-footer {
+  text-align: center;
+  padding: 10px; }
+  footer.app-footer * {
+    color: #AAA; }
+  footer.app-footer a {
+    text-decoration: none; }
 
 .no-padding {
   padding: 0; }
