@@ -300,3 +300,13 @@ footer.app-footer{
 	}
 }
 .no-padding { padding : 0; }
+
+
+
+/* FANCY CONTROLLERS */
+.slider-toggle{
+	height: 50px;
+}
+.slider-toggle.off .noUi-handle {
+	border-color: red;
+}

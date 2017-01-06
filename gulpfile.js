@@ -38,6 +38,7 @@ gulp.task('images', function() {
 gulp.task('jshint', function() {
 	return gulp.src('./src/assets/js/*.js').pipe(jshint()).pipe(jshint.reporter('default'));
 });
+
 //copy vendor scripts and uglify all other scripts, creating source maps
 gulp.task('scripts', ['jshint'], function() {
 	gulp.src('./src/assets/js/vendors/**/*.js').pipe(gulp.dest('./build/assets/js/vendors'));
@@ -45,6 +46,8 @@ gulp.task('scripts', ['jshint'], function() {
 		outSourceMap: true
 	})).pipe(gulp.dest('./build/assets/js'));
 });
+
+
 //minify styles
 gulp.task('styles', ['sass'], function() {
 	return gulp.src('./src/assets/css/**').pipe(minifycss({
