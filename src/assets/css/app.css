@@ -7,8 +7,8 @@
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url("../fonts/fontawesome-webfont.eot?v=4.6.1");
-  src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.6.1") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.6.1") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.6.1") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.6.1") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.6.1#fontawesomeregular") format("svg");
+  src: url("/assets/fonts/fontawesome-webfont.eot?v=4.6.1");
+  src: url("/assets/fonts/fontawesome-webfont.eot?#iefix&v=4.6.1") format("embedded-opentype"), url("/assets/fonts/fontawesome-webfont.woff2?v=4.6.1") format("woff2"), url("/assets/fonts/fontawesome-webfont.woff?v=4.6.1") format("woff"), url("/assets/fonts/fontawesome-webfont.ttf?v=4.6.1") format("truetype"), url("/assets/fonts/fontawesome-webfont.svg?v=4.6.1#fontawesomeregular") format("svg");
   font-weight: normal;
   font-style: normal; }
 
@@ -2169,263 +2169,6 @@
   overflow: visible;
   clip: auto; }
 
-/*! nouislider - 9.1.0 - 2016-12-10 16:00:32 */
-/* Functional styling;
- * These styles are required for noUiSlider to function.
- * You don't need to change these rules to apply your design.
- */
-.noUi-target,
-.noUi-target * {
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none;
-  -ms-touch-action: none;
-  touch-action: none;
-  -ms-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box; }
-
-.noUi-target {
-  position: relative;
-  direction: ltr; }
-
-.noUi-base {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  z-index: 1;
-  /* Fix 401 */ }
-
-.noUi-connect {
-  position: absolute;
-  right: 0;
-  top: 0;
-  left: 0;
-  bottom: 0; }
-
-.noUi-origin {
-  position: absolute;
-  height: 0;
-  width: 0; }
-
-.noUi-handle {
-  position: relative;
-  z-index: 1; }
-
-.noUi-state-tap .noUi-connect,
-.noUi-state-tap .noUi-origin {
-  -webkit-transition: top 0.3s, right 0.3s, bottom 0.3s, left 0.3s;
-  transition: top 0.3s, right 0.3s, bottom 0.3s, left 0.3s; }
-
-.noUi-state-drag * {
-  cursor: inherit !important; }
-
-/* Painting and performance;
- * Browsers can paint handles in their own layer.
- */
-.noUi-base,
-.noUi-handle {
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0); }
-
-/* Slider size and handle placement;
- */
-.noUi-horizontal {
-  height: 18px; }
-
-.noUi-horizontal .noUi-handle {
-  width: 34px;
-  height: 28px;
-  left: -17px;
-  top: -6px; }
-
-.noUi-vertical {
-  width: 18px; }
-
-.noUi-vertical .noUi-handle {
-  width: 28px;
-  height: 34px;
-  left: -6px;
-  top: -17px; }
-
-/* Styling;
- */
-.noUi-target {
-  background: #FAFAFA;
-  border-radius: 4px;
-  border: 1px solid #D3D3D3;
-  box-shadow: inset 0 1px 1px #F0F0F0, 0 3px 6px -5px #BBB; }
-
-.noUi-connect {
-  background: #3FB8AF;
-  box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45);
-  -webkit-transition: background 450ms;
-  transition: background 450ms; }
-
-/* Handles and cursors;
- */
-.noUi-draggable {
-  cursor: ew-resize; }
-
-.noUi-vertical .noUi-draggable {
-  cursor: ns-resize; }
-
-.noUi-handle {
-  border: 1px solid #D9D9D9;
-  border-radius: 3px;
-  background: #FFF;
-  cursor: default;
-  box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB; }
-
-.noUi-active {
-  box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #DDD, 0 3px 6px -3px #BBB; }
-
-/* Handle stripes;
- */
-.noUi-handle:before,
-.noUi-handle:after {
-  content: "";
-  display: block;
-  position: absolute;
-  height: 14px;
-  width: 1px;
-  background: #E8E7E6;
-  left: 14px;
-  top: 6px; }
-
-.noUi-handle:after {
-  left: 17px; }
-
-.noUi-vertical .noUi-handle:before,
-.noUi-vertical .noUi-handle:after {
-  width: 14px;
-  height: 1px;
-  left: 6px;
-  top: 14px; }
-
-.noUi-vertical .noUi-handle:after {
-  top: 17px; }
-
-/* Disabled state;
- */
-[disabled] .noUi-connect {
-  background: #B8B8B8; }
-
-[disabled].noUi-target,
-[disabled].noUi-handle,
-[disabled] .noUi-handle {
-  cursor: not-allowed; }
-
-/* Base;
- *
- */
-.noUi-pips,
-.noUi-pips * {
-  -moz-box-sizing: border-box;
-  box-sizing: border-box; }
-
-.noUi-pips {
-  position: absolute;
-  color: #999; }
-
-/* Values;
- *
- */
-.noUi-value {
-  position: absolute;
-  text-align: center; }
-
-.noUi-value-sub {
-  color: #ccc;
-  font-size: 10px; }
-
-/* Markings;
- *
- */
-.noUi-marker {
-  position: absolute;
-  background: #CCC; }
-
-.noUi-marker-sub {
-  background: #AAA; }
-
-.noUi-marker-large {
-  background: #AAA; }
-
-/* Horizontal layout;
- *
- */
-.noUi-pips-horizontal {
-  padding: 10px 0;
-  height: 80px;
-  top: 100%;
-  left: 0;
-  width: 100%; }
-
-.noUi-value-horizontal {
-  -webkit-transform: translate3d(-50%, 50%, 0);
-  transform: translate3d(-50%, 50%, 0); }
-
-.noUi-marker-horizontal.noUi-marker {
-  margin-left: -1px;
-  width: 2px;
-  height: 5px; }
-
-.noUi-marker-horizontal.noUi-marker-sub {
-  height: 10px; }
-
-.noUi-marker-horizontal.noUi-marker-large {
-  height: 15px; }
-
-/* Vertical layout;
- *
- */
-.noUi-pips-vertical {
-  padding: 0 10px;
-  height: 100%;
-  top: 0;
-  left: 100%; }
-
-.noUi-value-vertical {
-  -webkit-transform: translate3d(0, 50%, 0);
-  transform: translate3d(0, 50%, 0);
-  padding-left: 25px; }
-
-.noUi-marker-vertical.noUi-marker {
-  width: 5px;
-  height: 2px;
-  margin-top: -1px; }
-
-.noUi-marker-vertical.noUi-marker-sub {
-  width: 10px; }
-
-.noUi-marker-vertical.noUi-marker-large {
-  width: 15px; }
-
-.noUi-tooltip {
-  display: block;
-  position: absolute;
-  border: 1px solid #D9D9D9;
-  border-radius: 3px;
-  background: #fff;
-  color: #000;
-  padding: 5px;
-  text-align: center; }
-
-.noUi-horizontal .noUi-tooltip {
-  -webkit-transform: translate(-50%, 0);
-  transform: translate(-50%, 0);
-  left: 50%;
-  bottom: 120%; }
-
-.noUi-vertical .noUi-tooltip {
-  -webkit-transform: translate(0, -50%);
-  transform: translate(0, -50%);
-  top: 50%;
-  right: 120%; }
-
 /* Colors */
 /* Fonts */
 /*!
@@ -3881,6 +3624,165 @@ legend {
   .pure-u-xxl-24-24 {
     width: 100%; } }
 
+/*!
+ * # Range slider for Semantic UI.
+ * 
+ */
+.ui.range {
+  width: 100%;
+  height: 20px; }
+
+.ui.range .inner {
+  margin: 0 10px 0 10px;
+  height: 20px;
+  position: relative; }
+
+.ui.range .inner:hover {
+  cursor: pointer; }
+
+.ui.range .inner .track {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
+  top: 9px;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.05); }
+
+.ui.inverted.range .inner .track {
+  background-color: rgba(255, 255, 255, 0.08); }
+
+.ui.range .inner .track-fill {
+  position: absolute;
+  width: 0;
+  height: 4px;
+  border-radius: 4px;
+  top: 9px;
+  left: 0;
+  background-color: #1b1c1d; }
+
+.ui.inverted.range .inner .track-fill {
+  background-color: #545454; }
+
+.ui.range .inner .thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background: #fff linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  background: #fff -webkit-linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  background: #fff -o-linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  background: #fff -moz-linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15), 0 0 0 1px rgba(34, 36, 38, 0.15) inset; }
+
+/*--------------
+     Colors
+---------------*/
+/* Red */
+.ui.red.range .inner .track-fill {
+  background-color: #DB2828; }
+
+.ui.red.inverted.range .inner .track-fill {
+  background-color: #FF695E; }
+
+/* Orange */
+.ui.orange.range .inner .track-fill {
+  background-color: #F2711C; }
+
+.ui.orange.inverted.range .inner .track-fill {
+  background-color: #FF851B; }
+
+/* Yellow */
+.ui.yellow.range .inner .track-fill {
+  background-color: #FBBD08; }
+
+.ui.yellow.inverted.range .inner .track-fill {
+  background-color: #FFE21F; }
+
+/* Olive */
+.ui.olive.range .inner .track-fill {
+  background-color: #B5CC18; }
+
+.ui.olive.inverted.range .inner .track-fill {
+  background-color: #D9E778; }
+
+/* Green */
+.ui.green.range .inner .track-fill {
+  background-color: #21BA45; }
+
+.ui.green.inverted.range .inner .track-fill {
+  background-color: #2ECC40; }
+
+/* Teal */
+.ui.teal.range .inner .track-fill {
+  background-color: #00B5AD; }
+
+.ui.teal.inverted.range .inner .track-fill {
+  background-color: #6DFFFF; }
+
+/* Blue */
+.ui.blue.range .inner .track-fill {
+  background-color: #2185D0; }
+
+.ui.blue.inverted.range .inner .track-fill {
+  background-color: #54C8FF; }
+
+/* Violet */
+.ui.violet.range .inner .track-fill {
+  background-color: #6435C9; }
+
+.ui.violet.inverted.range .inner .track-fill {
+  background-color: #A291FB; }
+
+/* Purple */
+.ui.purple.range .inner .track-fill {
+  background-color: #A333C8; }
+
+.ui.purple.inverted.range .inner .track-fill {
+  background-color: #DC73FF; }
+
+/* Pink */
+.ui.pink.range .inner .track-fill {
+  background-color: #E03997; }
+
+.ui.pink.inverted.range .inner .track-fill {
+  background-color: #FF8EDF; }
+
+/* Brown */
+.ui.brown.range .inner .track-fill {
+  background-color: #A5673F; }
+
+.ui.brown.inverted.range .inner .track-fill {
+  background-color: #D67C1C; }
+
+/* Grey */
+.ui.grey.range .inner .track-fill {
+  background-color: #767676; }
+
+.ui.grey.inverted.range .inner .track-fill {
+  background-color: #DCDDDE; }
+
+/* Black */
+.ui.black.range .inner .track-fill {
+  background-color: #1b1c1d; }
+
+.ui.black.inverted.range .inner .track-fill {
+  background-color: #545454; }
+
+/*--------------
+    Disabled
+---------------*/
+.ui.range.disabled {
+  opacity: .5; }
+
+.ui.range.disabled .inner:hover {
+  cursor: auto; }
+
+.ui.range.disabled .inner .track-fill {
+  background: #ccc; }
+
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
   box-sizing: border-box; }
@@ -4002,9 +3904,6 @@ select {
 .block {
   display: block; }
 
-.block-full {
-  width: 100%; }
-
 .show {
   display: block;
   opacity: 1; }
@@ -4045,25 +3944,17 @@ a.pure-button-primary {
 /* ---------------------------------------------- 
 	BUTTONS & CALLS TO ACTION 
 ---------------------------------------------- */
-.pure-button,
-.pure-button-primary,
-.button-primary,
-.btn-primary {
-  background-color: #0277BD;
+.pure-button {
   border-radius: 4px;
   text-shadow: none;
   font-weight: 300;
   transition: background-color 0.2s ease; }
-  .pure-button:hover, .pure-button:active, .pure-button:focus,
-  .pure-button-primary:hover,
-  .pure-button-primary:active,
-  .pure-button-primary:focus,
-  .button-primary:hover,
-  .button-primary:active,
-  .button-primary:focus,
-  .btn-primary:hover,
-  .btn-primary:active,
-  .btn-primary:focus {
+  .pure-button:hover, .pure-button:active, .pure-button:focus {
+    background-color: #AAA; }
+
+.pure-button-primary {
+  background-color: #0277BD; }
+  .pure-button-primary:hover, .pure-button-primary:active, .pure-button-primary:focus {
     background-color: #013758; }
 
 .button-small {
@@ -4161,6 +4052,7 @@ a.pure-button-primary {
 .ui-wrapper {
   margin: 10px;
   max-width: 640px;
+  max-height: 600px;
   background-color: #F4F4F4;
   border: 1px solid #DDD; }
 
@@ -4188,6 +4080,12 @@ main {
   background-color: white;
   padding: 1rem 3rem 1rem; }
 
+.ui-strata {
+  line-height: 3;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #DDD; }
+
 footer.app-footer {
   text-align: center;
   padding: 10px; }
@@ -4200,8 +4098,18 @@ footer.app-footer {
   padding: 0; }
 
 /* FANCY CONTROLLERS */
-.slider-toggle {
-  height: 50px; }
+input[type="range"] {
+  -webkit-appearance: none;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 50rem;
+  border-color: rgba(0, 0, 0, 0.1);
+  padding: 3px 5px;
+  width: 100%; }
 
-.slider-toggle.off .noUi-handle {
-  border-color: red; }
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #013758;
+  border-radius: 50rem;
+  height: 1em;
+  width: 1em; }

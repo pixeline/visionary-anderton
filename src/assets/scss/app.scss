@@ -1,9 +1,10 @@
 // VISIONARY BASIC FRAMEWORK
+
+$fa-font-path: "/assets/fonts";
 @import "font-awesome/font-awesome";
-@import "nouislider";
 @import "0.settings";
 @import "1.pure";
-
+@import "semanticui-range";
 // MOBILE-FIRST
 
 @import "2.base";

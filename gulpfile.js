@@ -33,6 +33,10 @@ gulp.task('images', function() {
 	gulp.src('./src/assets/images/**').pipe(gulp.dest('./build/assets/images'));
 });
 
+gulp.task('semantic-ui', function() {
+	gulp.src('./src/assets/semantic-ui/**/*').pipe(gulp.dest('./build/assets/semantic-ui'));
+});
+
 
 //run scripts through JSHint
 gulp.task('jshint', function() {
@@ -102,6 +106,7 @@ gulp.task('build', function() {
 	'copy',
 	'images', 
 	'html', 
+	'semantic-ui',
 	'styles', 
 	'scripts',
 	function(error) {

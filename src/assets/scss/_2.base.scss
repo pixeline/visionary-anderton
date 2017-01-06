@@ -62,9 +62,11 @@ select{
 	&--info{
 		background-color:#FFFFDD;
 	}
+
 	&--loud{
 		font-size:133%;
 	}
+	
 	&--discreete{
 		opacity:.8;
 		font-size:89%;
@@ -101,9 +103,7 @@ select{
 .block {
     display: block;
 }
-.block-full {
-    width: 100%;
-}
+
 .show {
     display: block;
     opacity: 1;
@@ -147,16 +147,20 @@ a.pure-button-primary{
 /* ---------------------------------------------- 
 	BUTTONS & CALLS TO ACTION 
 ---------------------------------------------- */
-.pure-button,
-.pure-button-primary,
-.button-primary,
-.btn-primary {
-	background-color:$blue;
+.pure-button {
 	border-radius: 4px;
 	text-shadow: none;
 	font-weight: 300;
 
 	transition: background-color 0.2s ease;
+	&:hover,
+	&:active,
+	&:focus {
+		background-color:$grey;
+	}
+}
+.pure-button-primary{
+	background-color:$blue;
 	&:hover,
 	&:active,
 	&:focus {
@@ -259,6 +263,7 @@ a.pure-button-primary{
 .ui-wrapper {
 	margin:10px;
 	max-width:640px;
+	max-height:600px;
 	background-color: $lightest-grey;
 	border:1px solid $light-grey;
 }
@@ -289,6 +294,14 @@ main {
 	padding:1rem 3rem 1rem;
 
 }
+
+.ui-strata{
+	line-height:3;
+	padding-bottom:1rem;
+	margin-bottom:1rem;
+	border-bottom:1px solid $light-grey;
+}
+
 footer.app-footer{
 	text-align: center;
 	padding:10px;
@@ -304,9 +317,20 @@ footer.app-footer{
 
 
 /* FANCY CONTROLLERS */
-.slider-toggle{
-	height: 50px;
+// Range
+input[type="range"] {
+    -webkit-appearance: none;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 50rem;
+    border-color: rgba(0, 0, 0, 0.1);
+    padding: 3px 5px;
+    width:100%;
 }
-.slider-toggle.off .noUi-handle {
-	border-color: red;
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: $dark-blue;
+    border-radius: 50rem;
+    height: 1em;
+    width: 1em;
 }

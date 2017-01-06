@@ -1,28 +1,37 @@
 (function($){
 
-// Write your code here
-
 // TURN ON/OFF Color Correction
-var toggleStatus = document.getElementById('js-status-indicator');
 
-noUiSlider.create(toggleStatus, {
-	orientation: "horizontal",
-	start: 0,
-	range: {
-		'min': [0, 1],
-		'max': 1
+// Pour le rendre actif, Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
+
+
+
+$('#js-status-indicator').checkbox({
+	
+	onChecked: function() {
+		console.log("checked");
+		$('#js-status-indicator-label').text('activée')
 	},
-	format: wNumb({
-		decimals: 0
-	})
-})
+	onUnchecked: function() {
+		console.log("unchecked");
+		$('#js-status-indicator-label').text('désactivée')
+	},
+}).checkbox('check'); // utilise "uncheck" pour la mettre en mode "désactivé".
 
-toggleStatus.noUiSlider.on('update', function( values, handle ){
-	if ( values[handle] === '1' ) {
-		toggleStatus.classList.add('off');
-	} else {
-		toggleStatus.classList.remove('off');
-	}
-});
 
+// $('#js-current-page-title').text(PAGETITLE)  <--- doit recevoir le contenu de la balise TITLE de la page courante.
+
+
+// Slider that sets intensity
+  $('#js-intensity-slider').range({
+    min: 0,
+    max: 10,
+    start: 5,
+    onChange: function(value) {
+
+      console.log(value);
+    }
+  });
+
+// FIN
 })(jQuery);
