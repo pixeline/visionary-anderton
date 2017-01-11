@@ -10,7 +10,7 @@ var gulp = require('gulp'),
 	zip = require('gulp-zip');
 var sass = require('gulp-sass');
 var browsersync = require('browser-sync').create();
-const runSequence = require('run-sequence');
+var runSequence = require('run-sequence');
 //clean build directory
 gulp.task('clean', function() {
 	return gulp.src('./build/*', {
