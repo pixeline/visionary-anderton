@@ -28,10 +28,21 @@ gulp.task('copy', function() {
 gulp.task('html', function() {
 	return gulp.src('./src/*.html').pipe(cleanhtml()).pipe(gulp.dest('./build'));
 });
+
+gulp.task('images', function() {
+	gulp.src('./src/assets/images/**').pipe(gulp.dest('./build/assets/images'));
+});
+
+gulp.task('semantic-ui', function() {
+	gulp.src('./src/assets/semantic-ui/**/*').pipe(gulp.dest('./build/assets/semantic-ui'));
+});
+
+
 //run scripts through JSHint
 gulp.task('jshint', function() {
 	return gulp.src('./src/assets/js/*.js').pipe(jshint()).pipe(jshint.reporter('default'));
 });
+
 //copy vendor scripts and uglify all other scripts, creating source maps
 gulp.task('scripts', ['jshint'], function() {
 	gulp.src('./src/assets/js/vendors/**/*.js').pipe(gulp.dest('./build/assets/js/vendors'));
@@ -39,6 +50,8 @@ gulp.task('scripts', ['jshint'], function() {
 		outSourceMap: true
 	})).pipe(gulp.dest('./build/assets/js'));
 });
+
+
 //minify styles
 gulp.task('styles', ['sass'], function() {
 	return gulp.src('./src/assets/css/**').pipe(minifycss({
@@ -81,15 +94,19 @@ gulp.task('browsersync-reload', function() {
 });
 gulp.task('watch', ['browser-sync'], function() {
 	gulp.watch(['./src/*.html'], ['html']);
+	gulp.watch(['./src/*.html'], ['copy']);
 	gulp.watch(['./src/assets/scss/**/*.scss'], ['styles']);
+	gulp.watch(['./src/assets/images/**/*'], ['images']);
 	gulp.watch(['./src/assets/js/**/*.js'], ['scripts', 'browsersync-reload']);
 });
 gulp.task('default', ['build','watch']);
 gulp.task('build', function() {	
 	runSequence(
 	'clean',
-	'copy', 
+	'copy',
+	'images', 
 	'html', 
+	'semantic-ui',
 	'styles', 
 	'scripts',
 	function(error) {
