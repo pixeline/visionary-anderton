@@ -7,8 +7,12 @@
   
   <title>Visionary - Chrome Extension</title>
   
-	 <link rel="stylesheet" type="text/css" href="assets/semantic-ui/semantic.min.css">
-	 <link rel="stylesheet" href="assets/css/app.css">
+	<link rel="stylesheet" type="text/css" href="assets/semantic-ui/semantic.min.css">
+	<link rel="stylesheet" href="assets/css/app.css">
+	<script src='assets/js/vendors/jquery-3.1.1.min.js'></script>
+	<script src="assets/semantic-ui/semantic.min.js"></script>
+	<script src="assets/js/vendors/semantic-range.js"></script>
+	<script src='assets/js/app.js'></script>	</body>
 	 
 	</head>
 
@@ -32,12 +36,12 @@
 							
 							<div class="pure-u-1 pure-u-sm-2-5">
 								<label for="email">Mot de passe <a href="#" class="js-forgotten-password-link">oublié?</a></label>
-								<input id="email" class="pure-u-23-24" type="password" placeholder="mot de passe">
+								<input id="mdp" class="pure-u-23-24" type="password" placeholder="mot de passe">
 							</div>
 							
 							<div class="pure-u-1 pure-u-sm-1-5">
 								<label>&nbsp;</label>
-								<button type="submit" class="pure-u-23-24 ui primary button js-submit-login">Connexion</button>
+								<button id="signin" type="submit" class="pure-u-23-24 ui primary button js-submit-login">Connexion</button>
 							</div>
 						</div>
 		        </fieldset>
@@ -45,15 +49,15 @@
 			  
 			  <p class="text-center" >ou via votre compte </p>
 	
-			<form id="register-auth" action="/register-auth" method="POST" class="text-center">			  
-				<button type="submit" name="auth" value="facebook" class="link button-facebook">
+			<form id="register-auth" class="text-center">			  
+				<button type="submit" id="facebook" name="auth" value="facebook" class="link button-facebook">
 					<i class="fa fa-facebook fa-5x" aria-hidden="true"></i>
 				</button>
 				
-				<button type="submit" name="auth" value="google" class="link button-google">
+				<button type="submit" id="google" name="auth" value="google" class="link button-google">
 					<i class="fa fa-google fa-5x" aria-hidden="true"></i> 
 				</button>
-				<button type="submit" name="auth" value="twitter" class="link button-twitter">
+				<button type="submit" id="twitter" name="auth" value="twitter" class="link button-twitter">
 					<i class="fa fa-twitter fa-5x" aria-hidden="true"></i> 
 				</button>
 			</form>
@@ -61,7 +65,8 @@
 			<p class="text-center"><a href="#" class="js-register-link">Pas encore de compte?</a></p>
 			  
 		  </div>
-			
+			<!-- Indicator of intensity adjustment -->
+
 			<div id="user-has-no-existing-test" class="screen hide">
 				
 				<div id="plugin-status" class="ui-strata">
@@ -85,8 +90,9 @@
 				</div>
 	
 			</div>
-			
-			<div id="user-has-existing-test" class="screen hide">
+			<!-- Intensity slider corrector -->
+
+			<div id="user-has-existing-test" class="screen hide ">
 				
 				<div id="plugin-status" class="ui-strata">
 		
@@ -100,7 +106,7 @@
 					<p>Ajuster l'intensité de la correction.</p>
 					 <div class="ui range" id="js-intensity-slider"></div>
 	
-					<div class="pure-u-sm-1-2">	
+					<!-- <div class="pure-u-sm-1-2">	
 						<div class="ui checkbox" style="letter-spacing: 0">
 							<input type="checkbox" name="enable-on-text" id="js-enable-on-text" checked>
 							<label for="js-enable-on-text">Actif sur les textes</label>
@@ -112,17 +118,17 @@
 							<input type="checkbox" name="enable-on-images" id="js-enable-on-images" checked>
 							<label for="js-enable-on-images">Actif sur les images</label>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="ui-strata">
-					<p>D'après le test vous êtes <strong><span id="js-diagnostic-percentage">78</span>% <span id="js-diagnostic-label">deutéranope</span></strong></p>
+					<p>D'après le test vous êtes <strong><span id="js-diagnostic-percentage"></span> <span id="js-diagnostic-label">deutéranope</span></strong></p>
 						<button type="submit" id="js-open-website" data-url="//check-your.colour-blindness.org" class="ui icon button"><i class="barcode icon"></i> Refaire le test de vision</button>
 				</div>
 	
-	<div class="ui-strata">
+			<div class="ui-strata">
 					<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
 					<p><button type="submit" class="ui icon button js-open-bugreport" data-url="//check-your.colour-blindness.org"><i class="send icon"></i> Soumettre cette page</button></p>
-				</div>
+			</div>
 	
 	
 			</div>
@@ -131,10 +137,4 @@
 		<footer class="app-footer voice--discreete">
 			<p><a href="//colour-blindness.org" class="no-underline">colour-blindness.org</a> - version <span class="js-version-number">1.2.3</span></p>
 		</footer>
-	
-		<script src='assets/js/vendors/jquery-3.1.1.min.js'></script>
-		<script src="assets/semantic-ui/semantic.min.js"></script>
-		<script src="assets/js/vendors/semantic-range.js"></script>
-		<script src='assets/js/app.js'></script>
-	</body>
 </html>

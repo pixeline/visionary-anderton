@@ -26,7 +26,6 @@ function defineSVGMatrix (typeCVD, amountDalto, amountTransf){
 		]
 	};
 
-	// à ne pas toucher ValA..N ressorti d'un article scientifique
 	var valA = valB = valC = 0.0,
 		valD = 0.7,
 		valE = 1.0,
@@ -35,14 +34,8 @@ function defineSVGMatrix (typeCVD, amountDalto, amountTransf){
 		valH = 0.0,
 		valI = 1.0;
 
- /* if(!options) options = { };
-		var type = typeof options.type == "string" ? options.type : "Normal",
-			amountDalto = typeof options.amountDalto == "number" ? options.amountDalto : 0.0,
-			amountTransf = typeof options.amountTransf == "number" ? options.amountTransf : 0.0;
-			amountHue = typeof options.amountHue == "number" ? options.amountHue : 0.0,
-			amountSaturation = typeof options.amountSaturation == "number" ? options.amountSaturation : 0.0;*/
-
 	// Apply Daltonization
+	
 	var cvd = CVDMatrix[typeCVD];
 
 	var cvda = cvd[0],
@@ -90,7 +83,6 @@ function applyFilter (element, filter){
 
 	if (element!=null){
 		$(element).addClass(filter);
- // element.classList.add(filter);
 	} else {
 		console.log("[Anderton:] Something wrong just happened...");
 	}
@@ -108,32 +100,33 @@ jQuery.fn.redraw = function() {
 	});
 };
 
-function defineCurrentColorCorrectionProfile(param) {
-  
- // alert("new mode:" + param.profile_name);
-  //TODO: fetch actual profile from distant server but for now...
-  //chrome.storage.local.get("userProfile", function (result) {
+function defineCurrentColorCorrectionProfile(param, delta, severity) {
 
-   // currentFilter = result.userProfile.correction_profile_result[0].filter[0].parameter;
-	//currentAmount = result.userProfile.correction_profile_result[0].filter[0].value / 100;
-	//currentIntensity = result.userProfile.correction_profile_result[0].filter[1].value / 100;
-	//currentFilter = JSON.stringify(result.userProfile);
-
-   // console.log("[Anderton:] Profile : " + currentFilter + " - " + "0" + " - " + "-0.5");
-  //  SVG_UPDATED_MATRIX = defineSVGMatrix(currentFilter, currentAmount, currentIntensity);
-  //  $("svg").find("#cvd_matrix_1").attr("values", SVG_UPDATED_MATRIX);
-   // $('html').redraw();
- // });
-
-//temporary fix
-	SVG_UPDATED_MATRIX = defineSVGMatrix(param.profile_name, -0.1, -0.5);
+	SVG_UPDATED_MATRIX = defineSVGMatrix(param.profile_name, delta, severity);
 	$("svg").find("#cvd_matrix_1").attr("values", SVG_UPDATED_MATRIX);
 	$('html').redraw();
 	console.log('[Anderton:] Fetched user profile and according colormatrix value - ' + param.profile_name);
 };
 
+function onExtensionMessage(request) {
+	var changed = false;
+	
+	if (request['severity'] !== undefined) {
+			changed = true;
+	}
 
+	if (request['delta'] !== undefined) {
+			changed = true;
+	}
 
+	if (changed)
+		prepareFilter();
+}
+
+(function initialize() {
+	chrome.extension.onRequest.addListener(onExtensionMessage);
+	chrome.extension.sendRequest({'init': true}, onExtensionMessage);
+})();
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -145,8 +138,7 @@ chrome.runtime.onMessage.addListener(
 
 	console.log("[Anderton:] We are currently switching to: " + request.profile_name);
 	param.profile_name = request.profile_name;
-
-	defineCurrentColorCorrectionProfile(param);
+	defineCurrentColorCorrectionProfile(param, -0.1, -0.5);
 
 
 	//to delete
@@ -156,16 +148,11 @@ chrome.runtime.onMessage.addListener(
 	}
 );
 
-
-
-
 /**************************************************************************************************************/
 /*
 Inittialize
 */
 console.log('[Anderton:] "Better keep your eyes open", he informed young Witwer. "It might happen to you at any time."');
-
-
 
 var SVG_DEFAULT_MATRIX =
 	'1 0 0 0 0 ' +
@@ -210,14 +197,22 @@ var cssContent =
 
 	$('head').append(cssContent);
 
+function prepareFilter(){
+	var delta, severity;
+	chrome.storage.local.get('delta', function (val){
+		delta = val.delta;
+	});
+	chrome.storage.local.get('severity', function (val){
+		severity = val.severity;
+	});
+	chrome.storage.local.get('currentMode', function (result) {
+		param = result.currentMode;
+		defineCurrentColorCorrectionProfile(param, delta, severity);
+	});
+	visionarize();
+};
 
 $(document).ready(function() {
 	console.log( "[Anderton:] Document fully loaded.");
-	chrome.storage.local.get('currentMode', function (result) {
-		//channels = result.channels;
-	   // alert(result.currentMode.profile_name);
-		param = result.currentMode;
-		defineCurrentColorCorrectionProfile(param);
-	});
-	visionarize();
+	prepareFilter();
 });

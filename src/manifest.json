@@ -1,53 +1,62 @@
 {
-  "name": "Anderton Extension",
-  "version": "1.2",
-  "manifest_version": 2,
-  "description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
-  "homepage_url": "http://colour-blindness.org/",
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  },
-  "permissions": [
-    "contextMenus",
-    "declarativeContent",
-    "<all_urls>",
-    "tabs",
-    "storage",
-    "http://*/*",
-    "https://*/*"    
-  ],
-  "default_locale": "en",
-  "background": {
-    "scripts": ["bg/background.js"],
-    "persistent": true
-  },
-  "browser_action": {
-    "default_icon": "icons/icon19.png",
-    "default_title": "browser action demo",
-    "default_popup": "index.html"
-  },
-
-  "content_scripts": [
-    {
-      "matches": [
-        "https://*/*", "http://*/*"
-      ],
-      "css": [
-        "contentscript/inject.css",
-        "assets/css/app.css"
-      ]
-    },
-    {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": [
-        "contentscript/mutagen.js",
-        "assets/js/vendors/jquery-3.1.1.min.js",
-        "assets/js/notify.min.js",
-        "assets/js/Vibrant.js",
-        "assets/js/color-thief.min.js"
-      ]
-    }
-  ]
+	"name": "CVD Anderton Extension",
+	"version": "1.8",
+	"manifest_version": 2,
+	"description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
+	"homepage_url": "http://colour-blindness.org/",
+	"icons": {
+		"16": "icons/icon16.png",
+		"48": "icons/icon48.png",
+		"128": "icons/icon128.png"
+	},
+	"permissions": [
+		"contextMenus",
+		"declarativeContent",
+		"<all_urls>",
+		"tabs",
+		"storage",
+		"identity",
+		"http://*/*",
+		"https://*/*"    
+	],
+	"default_locale": "en",
+	"background": {
+		"scripts": [
+			"bg/chrome_ex_oauthsimple.js",
+			"bg/chrome_ex_oauth.js",
+			"bg/background.js"
+		]
+	},
+	"browser_action": {
+		"default_icon": "icons/icon19.png",
+		"default_title": "browser action demo",
+		"default_popup": "index.html"
+	},
+	"oauth2": {
+		"client_id": "368063427013-ltnpiq8efno16upv0as5ebvnqt814riv.apps.googleusercontent.com",
+		"scopes": [
+			"https://www.googleapis.com/auth/drive"
+		]
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://*/*", "http://*/*"
+			],
+			"css": [
+				"contentscript/inject.css",
+				"assets/css/app.css"
+			]
+		},
+		{
+			"matches": ["https://*/*", "http://*/*"],
+			"js": [
+				"assets/js/vendors/jquery-3.1.1.min.js",
+				"assets/js/notify.min.js",
+				"assets/js/Vibrant.js",
+				"assets/js/color-thief.min.js",
+				"contentscript/mutagen.js"
+			]
+		}
+	]
 }

@@ -4,12 +4,12 @@ function submitHandler() {
   //alert('submitHandler');
   var payload = {
     login: "none",
-    pswd: "none"
+    pwd: "none"
   };
-  var username = document.getElementById("login").value;
-  var userpass = document.getElementById("pwd").value;
+  var username = document.getElementById("email").value;
+  var userpass = document.getElementById("mdp").value;
   payload.login= username;
-  payload.pswd= userpass;  
+  payload.pwd= userpass;  
   var resultToken = getToken(payload);
   console.log('Anderton_token=', localStorage['Anderton_token']);
   var checkedBoxes = document.querySelectorAll('input[name=check]:checked');
@@ -33,7 +33,7 @@ function signoff() {
   alert("See you newt time");
   var payload = {
      login: "none",
-     pswd: "none"
+     pwd: "none"
   };
   chrome.browserAction.setBadgeText({text: "OFF"});
   localStorage.clear();
@@ -46,7 +46,7 @@ function signoff() {
 function getToken(userObject){
   console.log("userObject",userObject);
   var usrname= userObject.login;
-  var psword= userObject.pswd;
+  var psword= userObject.pwd;
   $.ajax({
        type: "POST",
        url: "https://dev.colour-blindness.org/api/oauth",
