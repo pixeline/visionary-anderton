@@ -44,8 +44,7 @@
 				"https://*/*", "http://*/*"
 			],
 			"css": [
-				"contentscript/inject.css",
-				"assets/css/app.css"
+				"contentscript/inject.css"
 			]
 		},
 		{
