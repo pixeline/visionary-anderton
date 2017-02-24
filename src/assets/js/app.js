@@ -11,13 +11,10 @@ $('#js-status-indicator').checkbox({
 	onChecked: function() {
 		$('#js-status-indicator-label').text('activée');
 		$("#severity-slider-div").removeClass("hide");
-		$("#js-delta-slider").removeClass("hide");
-		
 	},
 	onUnchecked: function() {
 		$('#js-status-indicator-label').text('désactivée');
 		$("#severity-slider-div").addClass("hide");
-		$("#js-delta-slider").addClass("hide");
 	}
 }).checkbox('uncheck'); // utilise "uncheck" pour la mettre en mode "désactivé".
 
