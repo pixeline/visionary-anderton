@@ -2,18 +2,18 @@
 //alert ('We are in background');
 
 var oauthTwitter = ChromeExOAuth.initBackgroundPage({
-	'request_url': 'https://api.twitter.com/oauth/request_token',
-	'authorize_url': 'https://api.twitter.com/oauth/authorize',
-	'access_url': 'https://api.twitter.com/oauth/access_token',
-	'consumer_key':  "qA4aWLn5URoF7LCMRADl4HhEz",
-	'consumer_secret': 'nEeKjZOsVzFiGQjwMAdKy4PuOwy7gHozf2PyXihniTzfywntzZ',
-	'scope': '_twitter',
-	'app_name': 'twitter'
+  'request_url': 'https://api.twitter.com/oauth/request_token',
+  'authorize_url': 'https://api.twitter.com/oauth/authorize',
+  'access_url': 'https://api.twitter.com/oauth/access_token',
+  'consumer_key':  "qA4aWLn5URoF7LCMRADl4HhEz",
+  'consumer_secret': 'nEeKjZOsVzFiGQjwMAdKy4PuOwy7gHozf2PyXihniTzfywntzZ',
+  'scope': '_twitter',
+  'app_name': 'twitter'
 });
 
 function authenticateTwitter(){
 	oauthTwitter.authorize(function() {
-		
+		return localStorage['oauth_token_secret_twitter'];
 	});
 };
 
@@ -275,8 +275,8 @@ chrome.runtime.onStartup.addListener(function () {
 });
 
 chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-	// Use the token.
-	 console.log(token); 
+  // Use the token.
+   console.log(token); 
 });
 
 
