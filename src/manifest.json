@@ -17,6 +17,8 @@
 		"tabs",
 		"storage",
 		"identity",
+		"https://dev.colour-blindness.org/*",
+		"https://test-your.colour-blindness.org/*",
 		"http://*/*",
 		"https://*/*"    
 	],
@@ -29,7 +31,7 @@
 	},
 	"browser_action": {
 		"default_icon": "assets/images/icons/icon19.png",
-		"default_title": "browser action demo",
+		"default_title": "Visionary",
 		"default_popup": "index.html"
 	},
 	"oauth2": {

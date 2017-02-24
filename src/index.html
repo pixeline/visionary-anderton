@@ -26,17 +26,17 @@
 		<main>
 			<div id="login-form" class="screen">
 				<h1 class="ui-title">Bienvenue</h1>
-				<form action="#" class="pure-form pure-form-stacked">
+				<form class="pure-form pure-form-stacked">
 					<fieldset>
 						<div class="pure-g">
 							<div class="pure-u-1 pure-u-sm-2-5">
 								<label for="email">Votre email</label>
-								<input id="email" class="pure-u-23-24" type="email" placeholder="email">
+								<input id="email" name="email" class="pure-u-23-24" type="email" placeholder="email">
 							</div>
 							
 							<div class="pure-u-1 pure-u-sm-2-5">
 								<label for="email">Mot de passe <a href="#" class="js-forgotten-password-link">oublié?</a></label>
-								<input id="mdp" class="pure-u-23-24" type="password" placeholder="mot de passe">
+								<input id="mdp" name="mdp" class="pure-u-23-24" type="password" placeholder="mot de passe">
 							</div>
 							
 							<div class="pure-u-1 pure-u-sm-1-5">
@@ -48,21 +48,21 @@
 			  </form>
 			  
 			  <p class="text-center" >ou via votre compte </p>
-	
-			<form id="register-auth" class="text-center">			  
-				<button type="submit" id="facebook" name="auth" value="facebook" class="link button-facebook">
+			  <div id="js-sso-result"></div>
+			<div id="register-auth" class="text-center">			  
+				<button  id="facebook" name="auth" value="facebook" class="link button-facebook">
 					<i class="fa fa-facebook fa-5x" aria-hidden="true"></i>
 				</button>
 				
-				<button type="submit" id="google" name="auth" value="google" class="link button-google">
+				<button  id="google" name="auth" value="google" class="link button-google">
 					<i class="fa fa-google fa-5x" aria-hidden="true"></i> 
 				</button>
-				<button type="submit" id="twitter" name="auth" value="twitter" class="link button-twitter">
+				<button  id="twitter" name="auth" value="twitter" class="link button-twitter">
 					<i class="fa fa-twitter fa-5x" aria-hidden="true"></i> 
 				</button>
-			</form>
+			</div>
 			
-			<p class="text-center"><a id="register-user" class="js-register-link">Pas encore de compte?</a></p>
+			<p class="text-center"><a id="register-user" class="js-register-link" href="#">Pas encore de compte?</a></p>
 			  
 		  </div>
 			<!-- Indicator of intensity adjustment -->
