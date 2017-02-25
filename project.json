@@ -1,0 +1,7 @@
+{
+	"project_name": "visionary-anderton",
+	"project_slug": "visionary-anderton",
+	"src_dir": "./src",
+	"build_dir": "./build",
+	"distr_dir": "./dist"
+}

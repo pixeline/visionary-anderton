@@ -1,5 +1,4 @@
 'use strict';
-//npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml gulp-jshint gulp-strip-debug gulp-zip --save-dev
 var gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	cleanhtml = require('gulp-cleanhtml'),
@@ -7,82 +6,179 @@ var gulp = require('gulp'),
 	jshint = require('gulp-jshint'),
 	stripdebug = require('gulp-strip-debug'),
 	uglify = require('gulp-uglify'),
-	zip = require('gulp-zip');
-var sass = require('gulp-sass');
-var browsersync = require('browser-sync').create();
-var runSequence = require('run-sequence');
+	zip = require('gulp-zip'),
+	sass = require('gulp-sass'),
+	prompt = require('gulp-prompt'),
+	semver = require('semver'),
+	replace = require('gulp-replace'),
+	browsersync = require('browser-sync').create(),
+	runSequence = require('run-sequence'),
+	bump = require('gulp-bump');
+
+var project = require('./project.json');
+var pkg = require('./package.json');
+var app_version = pkg.version;
+
+
+
 //clean build directory
 gulp.task('clean', function() {
-	return gulp.src('./build/*', {
+	return gulp.src(project.build_dir + '/*', {
 		read: false
 	}).pipe(clean());
 });
+
+
 //copy static folders to build directory
+
+
 gulp.task('copy', function() {
-	gulp.src('./src/assets/fonts/**').pipe(gulp.dest('./build/assets/fonts'));
-	gulp.src('./src/icons/**').pipe(gulp.dest('./build/icons'));
-	gulp.src('./src/_locales/**').pipe(gulp.dest('./build/_locales'));
-	return gulp.src('./src/manifest.json').pipe(gulp.dest('./build'));
-});
-//copy and compress HTML files
-gulp.task('html', function() {
-	return gulp.src('./src/*.html').pipe(cleanhtml()).pipe(gulp.dest('./build'));
+	
+	return gulp.src( ['**/*', '!**/.*', '!/assets/scss', '!/assets/js'],  {cwd: project.src_dir + '/**' })
+	.pipe(gulp.dest(project.build_dir));
+
 });
 
-gulp.task('images', function() {
-	gulp.src('./src/assets/images/**').pipe(gulp.dest('./build/assets/images'));
-});
 
-gulp.task('semantic-ui', function() {
-	gulp.src('./src/assets/semantic-ui/**/*').pipe(gulp.dest('./build/assets/semantic-ui'));
+gulp.task('clean:html', function() {
+	//copy and compress HTML files
+	return gulp.src( project.build_dir + '/*.html')
+	.pipe( cleanhtml() )
+	.pipe( gulp.dest(project.build_dir) );
 });
-
 
 //run scripts through JSHint
 gulp.task('jshint', function() {
-	return gulp.src('./src/assets/js/*.js').pipe(jshint()).pipe(jshint.reporter('default'));
+	return gulp.src(project.src_dir + '/assets/js/*.js').pipe(jshint()).pipe(jshint.reporter('default'));
 });
 
 //copy vendor scripts and uglify all other scripts, creating source maps
-gulp.task('scripts', ['jshint'], function() {
-	gulp.src('./src/assets/js/vendors/**/*.js').pipe(gulp.dest('./build/assets/js/vendors'));
-	return gulp.src(['./src/assets/js/**/*.js', '!src/assets/js/vendors/**/*.js']).pipe(stripdebug()).pipe(uglify({
-		outSourceMap: true
-	})).pipe(gulp.dest('./build/assets/js'));
+gulp.task('scripts', function() {
+	gulp.src(project.src_dir + '/assets/js/vendors/**/*.js')
+		.pipe(gulp.dest(project.build_dir + '/assets/js/vendors'));
+	
+	return gulp.src([project.src_dir + '/assets/js/*.js'])
+/*
+		.pipe(stripdebug())
+		.pipe(uglify({
+			outSourceMap: true
+		}))
+*/
+		.pipe(gulp.dest(project.build_dir + '/assets/js'));
 });
 
 
 //minify styles
 gulp.task('styles', ['sass'], function() {
-	return gulp.src('./src/assets/css/**').pipe(minifycss({
-		root: './src/assets/css',
+	return gulp.src(project.src_dir + '/assets/css/**').pipe(minifycss({
+		root: project.src_dir + '/assets/css',
 		keepSpecialComments: 0
-	})).pipe(gulp.dest('./build/assets/css'));
+	})).pipe(gulp.dest(project.build_dir + '/assets/css'));
 });
 gulp.task('sass', function() {
-	return gulp.src('./src/assets/scss/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('./src/assets/css'));
+	return gulp.src(project.src_dir + '/assets/scss/*.scss')
+	.pipe( sass().on('error', sass.logError) )
+	.pipe( gulp.dest(project.src_dir + '/assets/css') );
 });
+
 //build ditributable and sourcemaps after other tasks completed
-gulp.task('zip', ['html', 'scripts', 'styles', 'copy'], function() {
-	var manifest = require('./src/manifest'),
-		distFileName = manifest.name + ' v' + manifest.version + '.zip',
-		mapFileName = manifest.name + ' v' + manifest.version + '-maps.zip';
-	//collect all source maps
-	gulp.src('./build/assets/js/**/*.map').pipe(zip(mapFileName)).pipe(gulp.dest('./dist'));
-	//build distributable extension
-	return gulp.src(['./build/**', '!build/assets/js/**/*.map']).pipe(zip(distFileName)).pipe(gulp.dest('./dist'));
+gulp.task('zip', function() {
+	runSequence(
+		'clean',
+		'copy', 
+		'styles', 
+		'scripts',
+		'version:bump',
+		'cache:bust',
+		'clean:html',
+		function(){
+			var manifest = require(project.src_dir + '/manifest');
+
+			//collect all source maps
+			gulp.src(project.build_dir + '/assets/js/**/*.map')
+				.pipe(zip( manifest.name + ' v' + manifest.version + '-maps.zip' ))
+				.pipe(gulp.dest( project.distr_dir ));
+
+			//build distributable extension
+			return gulp.src([project.build_dir + '/**', '!build/assets/js/**/*.map'])
+			.pipe(zip( manifest.name + ' v' + manifest.version + '.zip'  ))
+			.pipe(gulp.dest( project.distr_dir));
+		}
+		, function( error ) {
+			if ( error ) {
+				console.log(error.message);
+			}
+		}
+	);
+	
 });
+
 //run all tasks after build directory has been cleaned
 gulp.task('release', ['clean'], function() {
 	gulp.start('zip');
 });
+
+gulp.task('default', ['build']);
+gulp.task('build', function() {	
+	return runSequence(
+	'clean',
+	'copy', 
+	'styles', 
+	'scripts',
+	'cache:bust',
+	'clean:html',
+	function(error) {
+		if (error) {
+			console.log(error.message);
+		}
+	});
+});
+
+gulp.task("version:bump", function () {
+	// Versioning update.
+    return gulp.src("*")
+    	.pipe(
+    		prompt.prompt({
+	    		type: 'list',
+				name: 'bump',
+				message: 'Which type of release: "patch", "minor", or "major" ?',
+				choices: ['patch', 'minor', 'major' ],
+				default: 'patch'
+			}, function(res){
+				//value is in res.bump
+				app_version = semver.inc(pkg.version, res.bump);
+				return gulp.src("./package.json")
+				.pipe(bump({ type: res.bump }))
+				.pipe(gulp.dest("./"));
+			})
+		);
+});
+gulp.task('cache:bust', ['copy'],  function(){
+	// Append app version to CSS/JS dependencies.
+	return gulp.src([ project.build_dir +'/*.html', project.build_dir +'/manifest.json'])
+		.pipe(replace( '{VERSION}', app_version ))
+		.pipe(gulp.dest(project.build_dir));
+});
+
+
+
+/// NOT USED ANYMORE
+
+//gulp.task('watch', ['browser-sync'], function() {
+gulp.task('watch', function() {
+	gulp.watch([ project.src_dir + '/**/*.{html,jpeg,png,gif,jpg,json}' ], ['copy', 'cache:bust']);
+	gulp.watch([project.src_dir + '/assets/scss/**/*.scss'], ['styles']);
+	gulp.watch([project.src_dir + '/assets/js/**/*.js'], ['scripts', 'browsersync-reload']);
+});
+
+
 // Browsersync tasks
 gulp.task('browser-sync', function() {
 	browsersync.init({
 		server: {
-			baseDir: ['./build']
+			baseDir: [project.build_dir]
 		},
-		files: ['./build/**/*'],
+		files: [project.build_dir + '/**/*'],
 		notify: false,
 		port: 2017
 	});
@@ -90,28 +186,5 @@ gulp.task('browser-sync', function() {
 gulp.task('browsersync-reload', function() {
 	browsersync.reload({
 		stream: true
-	});
-});
-gulp.task('watch', ['browser-sync'], function() {
-	gulp.watch(['./src/*.html'], ['html']);
-	gulp.watch(['./src/*.html'], ['copy']);
-	gulp.watch(['./src/assets/scss/**/*.scss'], ['styles']);
-	gulp.watch(['./src/assets/images/**/*'], ['images']);
-	gulp.watch(['./src/assets/js/**/*.js'], ['scripts', 'browsersync-reload']);
-});
-gulp.task('default', ['build','watch']);
-gulp.task('build', function() {	
-	runSequence(
-	'clean',
-	'copy',
-	'images', 
-	'html', 
-	'semantic-ui',
-	'styles', 
-	'scripts',
-	function(error) {
-		if (error) {
-			console.log(error.message);
-		}
 	});
 });
