@@ -6,5 +6,7 @@ dist
 *.log
 npm-debug.log
 src/assets/scss/.sass-cache
-
 src/.DS_Store
+*~
+*.swp
+*.swo

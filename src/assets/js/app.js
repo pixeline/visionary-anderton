@@ -1,11 +1,12 @@
 var visionary = {
 	api: 'https://dev.colour-blindness.org/api'
 };
+
+
 // BEGIN
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	chrome.extension.getBackgroundPage().updateTabs();
 });
-
 checkTwitterLogin();
 
 // TURN ON/OFF Color Correction
@@ -16,14 +17,14 @@ $('#js-status-indicator').checkbox({
 		$('#js-status-indicator-label').text('activée');
 		$("#severity-slider-div").removeClass("hide");
 		$("#js-delta-slider").removeClass("hide");
-
 	},
 	onUnchecked: function() {
 		$('#js-status-indicator-label').text('désactivée');
 		$("#severity-slider-div").addClass("hide");
 		$("#js-delta-slider").addClass("hide");
 	}
-}).checkbox('uncheck'); // utilise "uncheck" pour la mettre en mode "désactivé".
+}).checkbox('uncheck');
+// utilise "uncheck" pour la mettre en mode "désactivé".
 // $('#js-current-page-title').text(PAGETITLE)  <--- doit recevoir le contenu de la balise TITLE de la page courante.
 // Slider that sets intensity
 $('#js-delta-slider').range({
@@ -48,8 +49,10 @@ $('#js-severity-slider').range({
 });
 
 
-$("#signin").on('click', function() {
+$("#signin").on('click', function(e) {
 
+	e.preventDefault();
+	
 	var payload = {
 		login: "none",
 		pwd: "none"
@@ -62,51 +65,94 @@ $("#signin").on('click', function() {
 	console.log(payload);
 
 	var resultToken = getToken(payload);
-	console.log('Anderton_token=', localStorage.getItem('Anderton_token'));
-	var checkedBoxes = $('input[name=check]:checked');
-	console.log(checkedBoxes);
-	chrome.browserAction.setBadgeText({
-		text: "ON"
-	});
-	var diagratio = localStorage.getItem("Diag_ratio");
-	$("js-diagnostic-percentage").html(diagratio);
-	chrome.runtime.sendMessage(payload, function(response) {
-		console.log(response.farewell);
-	});
 
+	console.log( resultToken );
 
+	if (resultToken) {
+		
+		console.log('LS Anderton_token=', localStorage.getItem('Anderton_token'));
+		var checkedBoxes = $('input[name=check]:checked');
+		console.log(checkedBoxes);
+		chrome.browserAction.setBadgeText({
+			text: "ON"
+		});
+		var diagratio = localStorage.getItem("Diag_ratio");
+		$("js-diagnostic-percentage").html(diagratio);
+		chrome.runtime.sendMessage(payload, function(response) {
+			console.log(response.farewell);
+		});
+		chrome.browserAction.setPopup({
+			//tabId: tab.id[0],			// Set the new popup for this tab.
+			popup: 'anderton.html' // Open this html file within the popup.
+		});
+	}
 });
+
 $("#twitter").on("click", twitterLogin);
 
-
 // Google Login
-$("#google").on("click", function(e) {
-
+$("#google").on('click', function(e) {
 	e.preventDefault();
 	$('#js-sso-result').html("start...");
+
 	chrome.identity.getAuthToken({
 		'interactive': false
 	}, function(token) {
 		localStorage.setItem('google_access_token', token);
-		$('#js-sso-result').html("received: " + token);
+		$('#js-sso-result').html("Token received: " + token);
 	});
-	$('#js-sso-result').html("finished..." + token);
+	$('#js-sso-result').html("finished...");
 });
-
-
 $("#register-user").on("click", function() {
 	window.location.href = "subscribe.html";
 });
 $("#register-btn").on("click", register);
 $("#signout").on("click", signoff);
-// END.
+
+// END ----
+
+function getToken(userObject) {
+	console.log("userObject", userObject);
+	var usrname = userObject.login;
+	var psword = userObject.pwd;
+	console.log("contacting server at " +  visionary.api + "/oauth");
+	$.ajax({
+		type: "POST",
+		url: visionary.api + "/oauth",
+		data: {
+			"email": usrname,
+			"password": psword,
+		},
+		async: true,
+		success: function(data) {
+			// return object with token
+			console.log( 'testing data value' + data);
+			if (data.code && data.code === 401) {
+				$('#js-sso-result').html("erreur: " + data.error);
+				console.log('DAta error', data.error);
+				//window.location.href = "anderton.html";
+				return false;
+			} else if (data.token && data.token !== null) {
+				console.log('IN Local Storage');
+				localStorage.setItem('Anderton_token', data.token);
+				return data.token;
+			}
+		},
+		error: function(exception, message) {
+			$('#js-sso-result').html("Erreur: type: " + message + " exception: " + exception);
+			console.log( "Erreur: type: " + message + " exception: " , (exception) );
+			return false;
+		},
+		dataType: "json"
+	});
+}
 
 function checkTwitterLogin() {
 	var twitterToken = localStorage.getItem('oauth_token_secret_twitter');
 	if (twitterToken) {
 		if (validateTwitterToken(twitterToken)) {
 			chrome.browserAction.setPopup({
-				popup: 'nextindex.html'
+				popup: 'anderton.html'
 			});
 		} else {
 			console.log('wrong twitter authentication');
@@ -131,34 +177,6 @@ function validateTwitterToken(token) {
 		},
 		dataType: "json"
 	});
-}
-
-function login() {
-	//alert('submitHandler');
-	var payload = {
-		login: "none",
-		pwd: "none"
-	};
-	var username = $("#email").val();
-	var userpass = $("#mdp").val();
-	payload.login = username;
-	payload.pwd = userpass;
-
-	console.log(payload);
-
-	var resultToken = getToken(payload);
-	console.log('Anderton_token=', localStorage.getItem('Anderton_token'));
-	var checkedBoxes = $('input[name=check]:checked');
-	console.log(checkedBoxes);
-	chrome.browserAction.setBadgeText({
-		text: "ON"
-	});
-	var diagratio = localStorage.getItem("Diag_ratio");
-	$("js-diagnostic-percentage").html(diagratio);
-	chrome.runtime.sendMessage(payload, function(response) {
-		console.log(response.farewell);
-	});
-
 }
 
 function signoff() {
@@ -186,48 +204,10 @@ function signoff() {
 	chrome.extension.getBackgroundPage().clearDeltaAndSeverity();
 }
 
-function getToken(userObject) {
-	console.log("userObject", userObject);
-	var usrname = userObject.login;
-	var psword = userObject.pwd;
-	$.ajax({
-		type: "POST",
-		url: visionary.api + "/oauth",
-		data: {
-			"email": usrname,
-			"password": psword,
-		},
-		async: false,
-		success: function(data) {
-			// return object with token
-			console.log(('testing data value'), data);
-			if (data.code && data.code === 401) {
-				alert(data.error);
-				console.log('DAta error', data.error);
-				window.location.href = "nextindex.html";
-			} else if (data.token) {
-				console.log('IN Local Storage');
-				localStorage.setItem('Anderton_token', data.token);
-				chrome.browserAction.setPopup({
-					//tabId: tab.id[0],			// Set the new popup for this tab.
-					popup: 'nextindex.html' // Open this html file within the popup.
-				});
-
-			}
-		},
-		error: function(exception) {
-			alert('Une erreur est survenue veuillez s\'il vous plaît essayer plus tard / Error Occured please try again in few minutes');
-		},
-		dataType: "json"
-	});
-}
 
 function twitterLogin() {
 	chrome.extension.getBackgroundPage().authenticateTwitter();
 }
-
-
-
 
 function register() {
 	var username = $("#register-email").val();

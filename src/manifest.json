@@ -17,6 +17,8 @@
 		"tabs",
 		"storage",
 		"identity",
+		"https://accounts.google.com/*", 
+		"https://www.googleapis.com/*",
 		"https://dev.colour-blindness.org/*",
 		"https://test-your.colour-blindness.org/*",
 		"http://*/*",
@@ -35,10 +37,8 @@
 		"default_popup": "index.html"
 	},
 	"oauth2": {
-		"client_id": "368063427013-ltnpiq8efno16upv0as5ebvnqt814riv.apps.googleusercontent.com",
-		"scopes": [
-			"https://www.googleapis.com/auth/drive"
-		]
+		"client_id": "1093942885868-l4oj3j6u10vundumohj13jcr6iekimu9.apps.googleusercontent.com",
+		"scopes": ["https://www.googleapis.com/auth/plus.login"]
 	},
 	"content_scripts": [
 		{

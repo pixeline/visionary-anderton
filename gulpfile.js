@@ -118,10 +118,9 @@ gulp.task('release', ['clean'], function() {
 	gulp.start('zip');
 });
 
-//gulp.task('default', ['build','watch']);
 gulp.task('default', ['build']);
 gulp.task('build', function() {	
-	runSequence(
+	return runSequence(
 	'clean',
 	'copy', 
 	'styles', 
@@ -154,7 +153,7 @@ gulp.task("version:bump", function () {
 			})
 		);
 });
-gulp.task('cache:bust',  function(){
+gulp.task('cache:bust', ['copy'],  function(){
 	// Append app version to CSS/JS dependencies.
 	return gulp.src([ project.build_dir +'/*.html', project.build_dir +'/manifest.json'])
 		.pipe(replace( '{VERSION}', app_version ))
@@ -164,11 +163,11 @@ gulp.task('cache:bust',  function(){
 
 
 /// NOT USED ANYMORE
-gulp.task('watch', ['browser-sync'], function() {
-	gulp.watch([project.src_dir + '/*.html'], ['html']);
-	gulp.watch([project.src_dir + '/*.html'], ['copy']);
+
+//gulp.task('watch', ['browser-sync'], function() {
+gulp.task('watch', function() {
+	gulp.watch([ project.src_dir + '/**/*.{html,jpeg,png,gif,jpg,json}' ], ['copy', 'cache:bust']);
 	gulp.watch([project.src_dir + '/assets/scss/**/*.scss'], ['styles']);
-	gulp.watch([project.src_dir + '/assets/images/**/*'], ['images']);
 	gulp.watch([project.src_dir + '/assets/js/**/*.js'], ['scripts', 'browsersync-reload']);
 });
 

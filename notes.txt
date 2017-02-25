@@ -1,0 +1,21 @@
+# manifest.json
+- voir si on peut diminuer le nombre de privilèges (moins on a besoin, mieux c'est)
+- notamment, tester avec activeTab
+https://developer.chrome.com/extensions/getstarted
+
+
+## useful documentation
+
+Main Documentation:
+https://developer.chrome.com/extensions/devguide
+
+oAuth chapter:
+https://developer.chrome.com/extensions/tut_oauth
+
+
+
+https://console.developers.google.com/apis/credentials/oauthclient/1093942885868-l4oj3j6u10vundumohj13jcr6iekimu9.apps.googleusercontent.com?project=visionary-colourblindness
+
+Identity example
+https://github.com/GoogleChrome/chrome-app-samples/blob/master/samples/identity/manifest.json
+  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDJB6ZGcGxtlr/34s+TKgi84QiP7DMekqOjSUS2ubmbhchlM6CN9gYdGQ1aBI3TBXG3YaAu+XyutFA8M8NLLWc4OOGByWaGV11DP6p67g8a+Ids/gX6cNSRnRHiDZXAd44ATxoN4OZjZJk9iQ26RIUjwX07bzntlI+frwwKCk4WQIDAQAB",

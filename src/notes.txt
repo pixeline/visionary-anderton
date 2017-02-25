@@ -1,4 +1,0 @@
-# manifest.json
-- voir si on peut diminuer le nombre de privilèges (moins on a besoin, mieux c'est)
-- notamment, tester avec activeTab
-https://developer.chrome.com/extensions/getstarted
