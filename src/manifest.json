@@ -1,6 +1,5 @@
 {
   "name": "Anderton Extension",
-  "version": "1.2",
   "manifest_version": 2,
   "description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
   "homepage_url": "http://colour-blindness.org/",
@@ -15,38 +14,48 @@
     "<all_urls>",
     "tabs",
     "storage",
+    "identity",
     "http://*/*",
-    "https://*/*"    
-  ],
+    "https://*/*",
+    "https://accounts.google.com/*", 
+    "https://www.googleapis.com/*",
+    "https://dev.colour-blindness.org/*",
+    "https://test-your.colour-blindness.org/*"
+    ],
   "default_locale": "en",
   "background": {
-    "scripts": ["bg/background.js"],
-    "persistent": true
+    "scripts": [
+      "bg/chrome_ex_oauthsimple.js",
+      "bg/chrome_ex_oauth.js",
+      "bg/background.js"
+    ]
   },
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "browser action demo",
     "default_popup": "index.html"
   },
-
+  "oauth2": {
+    "client_id": "368063427013-ltnpiq8efno16upv0as5ebvnqt814riv.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/plus.login"]
+   },
   "content_scripts": [
     {
       "matches": [
         "https://*/*", "http://*/*"
       ],
       "css": [
-        "contentscript/inject.css",
-        "assets/css/app.css"
+        "contentscript/inject.css"
       ]
     },
     {
       "matches": ["https://*/*", "http://*/*"],
       "js": [
-        "contentscript/mutagen.js",
         "assets/js/vendors/jquery-3.1.1.min.js",
         "assets/js/notify.min.js",
         "assets/js/Vibrant.js",
-        "assets/js/color-thief.min.js"
+        "assets/js/color-thief.min.js",
+        "contentscript/mutagen.js"
       ]
     }
   ]

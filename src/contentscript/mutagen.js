@@ -108,7 +108,7 @@ jQuery.fn.redraw = function() {
 	});
 };
 
-function defineCurrentColorCorrectionProfile(param) {
+function defineCurrentColorCorrectionProfile(param, delta, severity) {
   
  // alert("new mode:" + param.profile_name);
   //TODO: fetch actual profile from distant server but for now...
@@ -126,14 +126,31 @@ function defineCurrentColorCorrectionProfile(param) {
  // });
 
 //temporary fix
-	SVG_UPDATED_MATRIX = defineSVGMatrix(param.profile_name, -0.1, -0.5);
+	SVG_UPDATED_MATRIX = defineSVGMatrix(param.profile_name, delta, severity);
 	$("svg").find("#cvd_matrix_1").attr("values", SVG_UPDATED_MATRIX);
 	$('html').redraw();
 	console.log('[Anderton:] Fetched user profile and according colormatrix value - ' + param.profile_name);
 };
 
+function onExtensionMessage(request) {
+  var changed = false;
+  
+  if (request['severity'] !== undefined) {
+      changed = true;
+  }
 
+  if (request['delta'] !== undefined) {
+      changed = true;
+  }
 
+  if (changed)
+    prepareFilter();
+}
+
+(function initialize() {
+  chrome.extension.onRequest.addListener(onExtensionMessage);
+  chrome.extension.sendRequest({'init': true}, onExtensionMessage);
+})();
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
@@ -146,7 +163,7 @@ chrome.runtime.onMessage.addListener(
 	console.log("[Anderton:] We are currently switching to: " + request.profile_name);
 	param.profile_name = request.profile_name;
 
-	defineCurrentColorCorrectionProfile(param);
+	defineCurrentColorCorrectionProfile(param, -0.1, -0.5);
 
 
 	//to delete
@@ -210,14 +227,24 @@ var cssContent =
 
 	$('head').append(cssContent);
 
-
-$(document).ready(function() {
-	console.log( "[Anderton:] Document fully loaded.");
+function prepareFilter(){
+	var delta, severity;
+	chrome.storage.local.get('delta', function (val){
+		delta = val.delta;
+	});
+	chrome.storage.local.get('severity', function (val){
+		severity = val.severity;
+	});
 	chrome.storage.local.get('currentMode', function (result) {
 		//channels = result.channels;
 	   // alert(result.currentMode.profile_name);
 		param = result.currentMode;
-		defineCurrentColorCorrectionProfile(param);
+		defineCurrentColorCorrectionProfile(param, delta, severity);
 	});
 	visionarize();
+};
+
+$(document).ready(function() {
+	console.log( "[Anderton:] Document fully loaded.");
+	prepareFilter();
 });
