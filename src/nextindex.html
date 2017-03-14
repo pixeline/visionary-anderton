@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<meta http-equiv="Content-Security-Policy" content="default-src *; font-src * data: ; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* data: gap: 'unsafe-inline' 'unsafe-eval'" />
+
+  
+  <title>Visionary - Chrome Extension</title>
+  
+	 <link rel="stylesheet" type="text/css" href="assets/semantic-ui/semantic.min.css">
+	 <link rel="stylesheet" href="assets/css/app.css">
+	 
+	</head>
+
+	<body class="ui-wrapper voice">
+		
+		<header class="app-header">
+			<h1><img src="assets/images/logo.svg" alt="Visionary"></h1>
+			<h2 class="voice voice--discreete">Adapte le contraste des couleurs pour les daltoniens.</h2>
+		</header>
+		
+		<main>
+			<div id="login-form" class="screen ">
+			
+			  
+		  </div>
+			<!-- Indicator of intensity adjustment -->
+
+			
+			<!-- Intensity slider corrector -->
+
+			<div id="user-has-existing-test" class="screen ">
+				
+				<div id="plugin-status" class="ui-strata">
+					<div id="js-status-indicator" class="ui toggle checkbox ">
+						<input type="checkbox" id="anderton-status" name="anderton-status">
+						<label for="anderton-status">Correction des couleurs <span id="js-status-indicator-label" >désactivée</span></label>
+					</div>
+				</div>
+				
+				<div class="ui-strata hide" id="js-delta-slider-div">
+					<p>Ajuster l'intensité de la correction.</p>
+					 <div class="ui range" id="js-delta-slider"></div>
+				</div>
+				
+				<div>
+					<div class="pure-u-sm-1-2 hide">	
+						<div class="ui checkbox" style="letter-spacing: 0">
+							<input type="checkbox" name="enable-on-text" id="js-enable-on-text" checked>
+							<label for="js-enable-on-text">Actif sur les textes</label>
+						</div>					
+					</div>
+	
+					<div class="pure-u-sm-1-2 hide">	
+						<div class="ui checkbox">
+							<input type="checkbox" name="enable-on-images" id="js-enable-on-images" checked>
+							<label for="js-enable-on-images">Actif sur les images</label>
+						</div>
+					</div>
+				</div>
+					
+				<div class="ui-strata hide" id="severity-slider-div">
+					<p>Ajuster l'intensité du contraste</p>
+					 <div class="ui range" id="js-severity-slider"></div>
+				</div>
+				<div class="ui-strata">
+					<p>D'après le test vous êtes <strong><span id="js-diagnostic-percentage">78</span>% <span id="js-diagnostic-label">deutéranope</span></strong></p>
+						<button type="submit" id="js-open-website" href="test.html" data-url="//check-your.colour-blindness.org" class="ui icon button"><i class="barcode icon"></i> Refaire le test de vision</button>
+				</div>
+	
+				<div class="ui-strata">
+						<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
+						<p><button type="submit" class="ui icon button js-open-bugreport" data-url="//check-your.colour-blindness.org"><i class="send icon"></i> Soumettre cette page</button></p>
+				</div>
+				<div class="pure-u-1 pure-u-sm-1-5">
+					<button id="signout" type="submit" class="pure-u-23-24 ui primary button js-submit-login">signout</button>
+				</div>
+			
+	
+			</div>
+		</main>
+		
+		<footer class="app-footer voice--discreete">
+			<p><a href="//colour-blindness.org" class="no-underline">colour-blindness.org</a> - version <span class="js-version-number">1.8.2</span></p>
+		</footer>
+	
+		<script src='assets/js/vendors/jquery-3.1.1.min.js'></script>
+		<script src="assets/semantic-ui/semantic.min.js"></script>
+		<script src="assets/js/vendors/semantic-range.js"></script>
+		<script src='assets/js/app.js'></script>
+	</body>
+</html>

@@ -11,12 +11,14 @@ $('#js-status-indicator').checkbox({
 	onChecked: function() {
 		$('#js-status-indicator-label').text('activée');
 		$("#severity-slider-div").removeClass("hide");
+		$("#js-delta-slider-div").removeClass("hide");
 	},
 	onUnchecked: function() {
 		$('#js-status-indicator-label').text('désactivée');
 		$("#severity-slider-div").addClass("hide");
+		$("#js-delta-slider-div").addClass("hide");
 	}
-}).checkbox('uncheck'); // utilise "uncheck" pour la mettre en mode "désactivé".
+}).checkbox('unchecked'); // utilise "uncheck" pour la mettre en mode "désactivé".
 
 
 // $('#js-current-page-title').text(PAGETITLE)  <--- doit recevoir le contenu de la balise TITLE de la page courante.
@@ -39,7 +41,6 @@ $('#js-severity-slider').range({
 	start: -0.1,
 	step:0.1,
 	onChange: function(value) {
-		//console.log('severity = ' + value);
 		chrome.extension.getBackgroundPage().setSeverity(value);
 	}
 });
@@ -50,6 +51,7 @@ $('#js-severity-slider').range({
 
 function checkTwitterLogin(){
 	var twitterToken = localStorage['oauth_token_secret_twitter'];
+	console.log(twitterToken);
 	if(twitterToken){
 		if(validateTwitterToken(twitterToken)){
 			chrome.browserAction.setPopup({
@@ -61,6 +63,7 @@ function checkTwitterLogin(){
 		}
 	}
 };
+
 function validateTwitterToken(token){
 	$.ajax({
 			type: "POST",
@@ -71,9 +74,11 @@ function validateTwitterToken(token){
 			 },
 			async: false,
 			success: function(data){
+				console.log(data);
 				return true;
 			},
 			error: function(exception){
+				console.log(exception);
 				return false;
 			},       
 			dataType: "json"
@@ -95,12 +100,25 @@ function login() {
 	var checkedBoxes = document.querySelectorAll('input[name=check]:checked');
 	console.log(checkedBoxes);
 	chrome.browserAction.setBadgeText({text: "ON"});
+	/* Added */
+	// trying to get the diag-ratio value
+	/*chrome.runtime.sendMessage({method: "getdiag-ratio",function(response){
+		console.log(response);
+	});*/
 	var diagratio=localStorage["Diag_ratio"];
 	document.getElementById("js-diagnostic-percentage").innerHTML=diagratio;
 	chrome.runtime.sendMessage(payload, function(response) {
 		console.log(response.farewell);
 	});
 	
+ /* chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+
+		chrome.tabs.sendMessage(tabs[0].id, payload, function (response) {
+			console.log(response.farewell);
+		});
+	});
+*/
+
 }
 
 function signoff() {
@@ -142,19 +160,17 @@ function getToken(userObject){
 				if (data.code && data.code===401) {
 					alert(data.error);
 					console.log('DAta error', data.error);
-					window.location.href = "nextindex.html";
 				}else if(data.token){
 					console.log('IN Local Storage');
 					localStorage['Anderton_token'] = data.token;
 					chrome.browserAction.setPopup({
-						//tabId: tab.id[0],			// Set the new popup for this tab.
-						popup: 'nextindex.html'	// Open this html file within the popup.
+						popup: 'nextindex.html'
 					});	
-
 				}
+				return true;
 			},
 			error: function(exception){
-				alert('Une erreur est survenue veuillez s\'il vous plaît essayer plus tard / Error Occured please try again in few minutes');
+				alert('Error Occured please try again in few minutes');
 			},       
 			dataType: "json"
 	 });
@@ -169,8 +185,19 @@ function googleLogin(){
 		localStorage['google_access_token'] = token;
 	});
 };
+
 function switchToRegister(){
 	window.location.href = "subscribe.html";
+}
+
+function submitTest(){
+	var result = document.getElementById("result").value;
+	var ratio = document.getElementById("ratio").value;
+	alert("result = " + result + " - ratio = " + ratio);
+}
+
+function redoTest(){
+	window.location.href = "test.html";
 }
 
 function register(){
@@ -181,19 +208,30 @@ function register(){
 			url: "https://dev.colour-blindness.org/api/subscribe",
 			data: {
 					"email" : username,
-					"password" : userpass
+					"password" : userpass,
+					"name": "name",
+					"birth_date": 1990,
+					"gender": "F",
+					"countries_iso": "BE",
+					"postcode": 5000
 			 },
 			async: false,
-			success: function(data){
-				console.log('working');
-				console.log(data);
-			},
-			error: function(exception){
-				console.log('not working');
-				console.log(exception);
-			},       
+			success: switchToTestPage,
+			error: switchToTestPage,       
 			dataType: "json"
 	 });
+}
+
+function switchToTestPage(data){
+	console.log(data);
+	if (data.status && data.status===200) {
+		chrome.browserAction.setPopup({
+			popup: 'test.html'
+		});	
+	}
+	else{
+		alert("Erreur lors de l'inscription");
+	}
 }
 
 // BEGIN
@@ -215,6 +253,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	}
 	if(document.getElementById("register-btn")){
 		document.getElementById("register-btn").addEventListener("click", register);
+	}
+	if(document.getElementById("submit-test")){
+		document.getElementById("submit-test").addEventListener("click", submitTest);
+	}
+	if(document.getElementById("js-open-website")){
+		document.getElementById("js-open-website").addEventListener("click", redoTest);
 	}
 });
 
