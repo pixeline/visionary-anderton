@@ -1,9 +1,9 @@
 {
   "name": "Anderton Extension",
-  "version": "1.8.2.6",
+  "version": "{VERSION}",
   "manifest_version": 2,
   "description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
-  "homepage_url": "http://colour-blindness.org/",
+  "homepage_url": "https://colour-blindness.org/",
   "icons": {
     "16": "assets/images/icons/icon16.png",
     "48": "assets/images/icons//icon48.png",
@@ -25,38 +25,30 @@
     ],
   "default_locale": "en",
   "background": {
-    "scripts": [
-      "bg/chrome_ex_oauthsimple.js",
-      "bg/chrome_ex_oauth.js",
-      "bg/background.js"
-    ]
+    "page": "background.html"
   },
   "browser_action": {
     "default_icon": "assets/images/icons/icon19.png",
     "default_title": "browser action demo",
     "default_popup": "index.html"
   },
-  //"oauth2": {
-    //"client_id": "368063427013-ltnpiq8efno16upv0as5ebvnqt814riv.apps.googleusercontent.com",
-    //"scopes": ["https://www.googleapis.com/auth/plus.login"]
-   //},
   "content_scripts": [
     {
       "matches": [
         "https://*/*", "http://*/*"
       ],
       "css": [
-        "contentscript/inject.css"
+        "assets/js/contentscript/inject.css"
       ]
     },
     {
       "matches": ["https://*/*", "http://*/*"],
       "js": [
         "assets/js/vendors/jquery-3.1.1.min.js",
-        "assets/js/notify.min.js",
-        "assets/js/Vibrant.js",
-        "assets/js/color-thief.min.js",
-        "contentscript/mutagen.js"
+        "assets/js/contentscript/notify.min.js",
+        "assets/js/contentscript/Vibrant.js",
+        "assets/js/contentscript/color-thief.min.js",
+        "assets/js/contentscript/mutagen.js"
       ]
     }
   ]

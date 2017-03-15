@@ -52,29 +52,26 @@ gulp.task('jshint', function() {
 
 //copy vendor scripts and uglify all other scripts, creating source maps
 gulp.task('scripts', function() {
-	gulp.src(project.src_dir + '/assets/js/vendors/**/*.js').pipe(gulp.dest(project.build_dir + '/assets/js/vendors'));
+	gulp.src(project.src_dir + '/assets/js/vendors/**/*.js')
+	.pipe(gulp.dest(project.build_dir + '/assets/js/vendors'));
 
 	return gulp.src([project.src_dir + '/assets/js/*.js'])
-/*
-		.pipe(stripdebug())
-		.pipe(uglify({
-			outSourceMap: true
-		}))
-*/
+
 	.pipe(gulp.dest(project.build_dir + '/assets/js'));
 });
 
 
 //minify styles
-gulp.task('styles', ['sass'], function() {
-	return gulp.src(project.src_dir + '/assets/css/**').pipe(minifycss({
-		root: project.src_dir + '/assets/css',
-		keepSpecialComments: 0
-	})).pipe(gulp.dest(project.build_dir + '/assets/css'));
+gulp.task('styles', function() {
+	return gulp.src(project.src_dir + '/assets/css/*.scss')
+	.pipe(sass().on('error', sass.logError))
+	.pipe(gulp.dest(project.build_dir + '/assets/css'));
 });
+/*
 gulp.task('sass', function() {
 	return gulp.src(project.src_dir + '/assets/scss/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest(project.src_dir + '/assets/css'));
 });
+*/
 
 //build ditributable and sourcemaps after other tasks completed
 gulp.task('zip', function() {
@@ -123,10 +120,10 @@ gulp.task('cache:bust', ['copy'], function() {
 
 /// NOT USED ANYMORE
 //gulp.task('watch', ['browser-sync'], function() {
-gulp.task('watch', function() {
+gulp.task('watch', ['default'], function() {
 	gulp.watch([project.src_dir + '/**/*.{html,jpeg,png,gif,jpg,json}'], ['copy', 'cache:bust']);
-	gulp.watch([project.src_dir + '/assets/scss/**/*.scss'], ['styles']);
-	gulp.watch([project.src_dir + '/assets/js/**/*.js'], ['scripts', 'browsersync-reload']);
+	gulp.watch([project.src_dir + '/assets/css/*.scss'], ['styles']);
+	gulp.watch([project.src_dir + '/assets/js/**/*.js'], ['scripts']);
 });
 
 
