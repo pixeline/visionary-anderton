@@ -28,8 +28,8 @@ function updateTabs(){
 			for (var j = 0; j < tabs.length; j++) {
 				var url = tabs[j].url;
 				var msg = {
-					'delta': 'delta',
-					'severity': 'severity'
+				  'delta': 'd',
+				  'severity': 'v'
 				};
 				chrome.tabs.sendRequest(tabs[j].id, msg);
 			}
@@ -100,7 +100,10 @@ function setVisionMode(request) {
 				console.log("tabs id: " +tabs[0].id);
 			});
 		});
+
+
 	});
+
 };
 
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
@@ -249,8 +252,8 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.storage.local.get('currentMode', function (result) {
-		if (typeof result.currentMode === "undefined"){
-			//alert("No trace Please LogIn");
+	 	if (typeof result.currentMode === "undefined"){
+	 		//alert("No trace Please LogIn");
 			param = 	{profile_name: "visionarize_none"} ;
 		} else {
 			//alert("remember you");

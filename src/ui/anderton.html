@@ -1,0 +1,50 @@
+<div id="user-has-existing-test" class="screen ">
+				
+	<div id="plugin-status" class="ui-strata">
+		<div id="js-status-indicator" class="ui checkbox checked">
+			<input type="checkbox" id="anderton-status" checked="">
+			<label for="anderton-status">Correction <span id="js-status-indicator-label" >désactivée</span></label>
+		</div>
+	</div>
+	
+	<div class="ui-strata" id="js-delta-slider-div">
+		<p>Ajuster l'intensité de la correction.</p>
+		 <div class="ui range" id="js-delta-slider"></div>
+	</div>
+	
+	<div class="hidden">
+		<div class="pure-u-sm-1-2">	
+			<div class="ui checkbox" style="letter-spacing: 0">
+				<input type="checkbox" name="enable-on-text" id="js-enable-on-text" checked>
+				<label for="js-enable-on-text">Actif sur les textes</label>
+			</div>					
+		</div>
+
+		<div class="pure-u-sm-1-2">	
+			<div class="ui checkbox">
+				<input type="checkbox" name="enable-on-images" id="js-enable-on-images" checked>
+				<label for="js-enable-on-images">Actif sur les images</label>
+			</div>
+		</div>
+	</div>
+		
+	<div class="ui-strata" id="js-severity-slider-div">
+		<p>Ajuster l'intensité du contraste</p>
+		 <div class="ui range" id="js-severity-slider"></div>
+	</div>
+	<div class="ui-strata" id="js-diagnostic-div">
+		<p>Votre vision est à <strong><span id="js-diagnostic-percentage"></span><span id="js-diagnostic-label"></span></strong></p>
+	</div>
+
+	<div class="ui-strata hide">
+			<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
+			<p><button type="submit" class="ui icon button js-open-bugreport" data-url="//check-your.colour-blindness.org"><i class="send icon"></i> Soumettre cette page</button></p>
+	</div>
+	
+	<div style="margin-top:2rem;font-size:88%; color:#999">
+		<p>
+		<button id="do-signout" type="submit" class="ui js-submit-login button-as-link" style="float:right;">Se déconnecter</button>
+		<span id="js-username"></span>
+		</p>
+	</div>
+</div>
