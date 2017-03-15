@@ -12,83 +12,34 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 	// Set Startup screen
 		
-	if( visionary.user_is_logged_in !=='ok' ){
+	if( localStorage['visionary_logged_in'] !=='ok' ){
 		goTo('login');
 	} else{
-		goTo('anderton', anderton_javascript );
+		goTo('anderton', anderton_javascript);
 	}
 
-	// Events binding.
+	// Events bindings to document, so that it works with ajax-ed DOM.
 	
 	$( document )
-	.on('click', "#link-to-register-user", function(){
+	.on( 'click', "#do-signout", signoff)
+	.on( 'click', "#do-signin", signin)
+	.on( "click", "#do-subscribe", register)
+	.on( "click", "#submit-test", submitTest)
+	.on( 'click', "#link-to-register-user", function(){
 		goTo('subscribe');
 	})
-	.on('click', "#link-to-login-user", function(){
+	.on( 'click', "#link-to-login-user", function(){
 		goTo('login');
 	})
-	.on( 'click', "#do-signout", signoff)
-	.on( 'click', "#do-signin", function(e) {
-
-		e.preventDefault();
-		var user = {
-			email : $("#email").val(),
-			password: $("#mdp").val()
-		}
-		$.ajax({
-			type: "POST",
-			url: visionary.api + '/oauth',
-			data: user,
-			async: false,
-			success: function(data) {
-				// return object with token
-				console.log(('testing data value'), data);
-				if (data.code && data.code === 401) {
-					$('#js-feedback').html(data.error).show();
-					localStorage['visionary_logged_in'] = 'ko';
-
-				} else if (data.token) {
-					$('#js-feedback').html('IN Local Storage').show();
-					localStorage['Anderton_token'] = data.token;
-					localStorage['visionary_logged_in'] = 'ok';
-					visionary.user_is_logged_in = localStorage['visionary_logged_in'];
-					chrome.browserAction.setBadgeText({
-						text: "ON"
-					});
-					
-					goTo('anderton', anderton_javascript);
-/*
-					chrome.browserAction.setPopup({
-						popup: 'anderton.html'
-					});
-*/
-				}
-				return true;
-			},
-			error: function(exception) {
-				$('#js-feedback').html('Error Occured please try again in few minutes');
-			},
-			dataType: "json"
-		});
-
-/*
-		chrome.runtime.sendMessage(user, function(response) {
-			console.log(response.farewell);
-		});
-*/
-	})
-	.on("click", "#do-subscribe", register)
-	.on("click", "#submit-test", submitTest)
-	.on("click", "#js-open-website", function(){
+	.on( "click", "#js-open-website", function(){
 		goTo('test-de-classement');
 	});
 
-	// ANDERTON SCREEN
-	// TURN ON/OFF Color Correction
-	// Pour le rendre actif, Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
-
 	// FIN
 })(jQuery);
+
+
+// Helpers. --------------------------------------------------------
 
 function anderton_javascript(){
 
@@ -96,25 +47,41 @@ function anderton_javascript(){
 	Javascript to launch when screen goes to "Anderton"
 */
 	$("#js-diagnostic-percentage").html(localStorage["Diag_ratio"]);
+	$('#js-username').html(localStorage['visionary_username']);
 
-	$('#js-status-indicator').checkbox({
+	// Turn ON/OFF Color Correction
+	console.log(localStorage);
 
+	$('#js-status-indicator').checkbox().checkbox({
 		onChecked: function() {
 			$('#js-status-indicator-label').text('activée');
-			$("#severity-slider-div").removeClass("hide");
-			$("#js-delta-slider").removeClass("hide");
+			$("#js-severity-slider-div").removeClass("hide");
+			$("#js-delta-slider-div").removeClass("hide");
+			$('#js-diagnostic-div').removeClass('hide');
+			localStorage['anderton_active'] = 'active';
 		},
 		onUnchecked: function() {
 			$('#js-status-indicator-label').text('désactivée');
-			$("#severity-slider-div").addClass("hide");
-			$("#js-delta-slider").addClass("hide");
+			$("#js-severity-slider-div").addClass("hide");
+			$("#js-delta-slider-div").addClass("hide");
+			$('#js-diagnostic-div').addClass('hide');
+			localStorage['anderton_active'] = 'inactive';
+
 		}
-	}).checkbox('uncheck');
+	});
+
+	// Pour le rendre actif, Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
+	if( 'active' == localStorage['anderton_active'] ){
+		$('#js-status-indicator').checkbox('check');
+	} else{
+		$('#js-status-indicator').checkbox('uncheck');
+	}
+	
 	// utiliser "uncheck" pour la mettre en mode "désactivé".
 	$('#js-delta-slider').range({
 		min: -1,
 		max: 1,
-		start: -0.5,
+		start: 0,
 		step: 0.1,
 		onChange: function(value) {
 			chrome.extension.getBackgroundPage().setDelta(value);
@@ -124,7 +91,7 @@ function anderton_javascript(){
 	$('#js-severity-slider').range({
 		min: -0.5,
 		max: 0.5,
-		start: -0.1,
+		start: 0,
 		step: 0.1,
 		onChange: function(value) {
 			//console.log('severity = ' + value);
@@ -133,49 +100,54 @@ function anderton_javascript(){
 	});
 }
 
-function signoff() {
-	var payload = {
-		login: "none",
-		pwd: "none"
-	};
-	chrome.browserAction.setBadgeText({
-		text: "OFF"
-	});
-	localStorage.clear();
+function signin(e) {
 
-	param = {
-		profile_name: "visionarize_none"
-	};
+		e.preventDefault();
+		var user = {
+			email : $("#email").val(),
+			password: $("#mdp").val()
+		}
+		
+		var request = $.ajax({
+			type: "POST",
+			url: visionary.api + '/oauth',
+			data: user,
+			async: false,
+			dataType: "json"
+		});
+			
+		request.done(function( data) {
+			
+			console.log(data);
+			
+			// return object with token
+			if (data.code && data.code === 401) {
+				$('#js-feedback').html(data.error).show();
+				localStorage['visionary_logged_in'] = 'ko';
 
-	chrome.extension.getBackgroundPage().setVisionMode(param);
-	chrome.extension.getBackgroundPage().clearDeltaAndSeverity();
-	//chrome.extension.getBackgroundPage().logoutTwitter();
-	goTo('login');
+			} else if (data.token) {
+				$('#js-feedback').html('IN Local Storage').show();
+				localStorage['Anderton_token'] = data.token;
+				localStorage['visionary_logged_in'] = 'ok';
+				chrome.browserAction.setBadgeText({
+					text: "ON"
+				});
+					
+				goTo('anderton', anderton_javascript);
+			}
+			return true;
+		});
+			
+		request.fail(function( jqXHR, textStatus ) {
+			$('#js-feedback').html("Error Occured please try again in few minutes: " + textStatus).show();
+		});	
+
 /*
-	chrome.browserAction.setPopup({
-		popup: 'index.html'
-	});
+		chrome.runtime.sendMessage(user, function(response) {
+			console.log(response.farewell);
+		});
 */
-
-}
-
-
-function goTo(htmlPageName, callback) {
-/*
-		This function takes care of changing the Extension screen to the right UI
-		
-		how-to:
-		- Give your screen a short descriptive lowercase, no-space filename (ex: "login", "delete-user", ...)
-		- create the interface html in a specific html file inside folder "/ui" using EXACTLY the same name (with .html as extension) .
-		
-		If you need special javascript for that screen, wrap it into a function and use it as the Callback.
-	*/
-	
-	$('#ui-interactive-zone').stop().fadeOut(visionary.screen_transition_speed, function() {
-		$(this).load('./ui/' + htmlPageName + '.html').fadeIn(visionary.screen_transition_speed, callback);
-	});
-
-}
+	}
 
 function submitTest() {
 	var result = $("#result").val();
@@ -201,7 +173,8 @@ function register(e) {
 		$('#js-feedback').html( result.data ).show();
 		if(result.status === 'ok'){
 			localStorage['visionary_logged_in'] = 'ok';
-			visionary.user_is_logged_in = localStorage['visionary_logged_in'];
+			localStorage['visionary_username'] = result.data.email;
+			localStorage['visionary_userid'] = result.data.id;
 			goTo('test-de-classement');
 		}
 	});
@@ -209,21 +182,40 @@ function register(e) {
 		$('#js-feedback').html("Erreur: " + textStatus).show();
 	});
 }
-/*
+function signoff() {
+	var payload = {
+		login: "none",
+		pwd: "none"
+	};
+	chrome.browserAction.setBadgeText({
+		text: "OFF"
+	});
+	localStorage.clear();
 
-function switchToTestPage(data) {
-	console.log(data);
-	if (data.status && data.status === 200) {
-		chrome.browserAction.setPopup({
-			popup: 'test-de-classement.html'
-		});
-	} else {
-		alert("Erreur lors de l'inscription");
-	}
+	param = {
+		profile_name: "visionarize_none"
+	};
+
+	chrome.extension.getBackgroundPage().setVisionMode(param);
+	chrome.extension.getBackgroundPage().clearDeltaAndSeverity();
+	
+	goTo('login');
 }
-*/
-
-// BEGIN
 
 
-// END.
+function goTo(htmlPageName, callback) {
+/*
+		This function takes care of changing the Extension screen to the right UI
+		
+		how-to:
+		- Give your screen a short descriptive lowercase, no-space filename (ex: "login", "delete-user", ...)
+		- create the interface html in a specific html file inside folder "/ui" using EXACTLY the same name (with .html as extension) .
+		
+		If you need special javascript for that screen, wrap it into a function and use it as the Callback.
+	*/
+	
+	$('#ui-interactive-zone').stop().fadeOut(visionary.screen_transition_speed, function() {
+		$(this).load('./ui/' + htmlPageName + '.html').fadeIn(visionary.screen_transition_speed, callback);
+	});
+
+}
