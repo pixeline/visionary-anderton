@@ -1,7 +1,10 @@
 ///// LIBRARIES ///////////
 //alert ('We are in background');
 
-var oauthTwitter = ChromeExOAuth.initBackgroundPage({
+/*************************************************************/
+/***********************TWITTER*******************************/
+/*************************************************************/
+/*var oauthTwitter = ChromeExOAuth.initBackgroundPage({
   'request_url': 'https://api.twitter.com/oauth/request_token',
   'authorize_url': 'https://api.twitter.com/oauth/authorize',
   'access_url': 'https://api.twitter.com/oauth/access_token',
@@ -19,7 +22,8 @@ function authenticateTwitter(){
 
 function logoutTwitter(){
 	oauthTwitter.clearTokens();
-};
+};*/
+/************************************************************/
 
 function updateTabs(){
 	chrome.windows.getAll({'populate': true}, function(windows) {
@@ -38,7 +42,7 @@ function updateTabs(){
 };
 
 function getDistantProfile(login){
-	console.log(login);
+	console.log('ojectLogin='+login);
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', 'https://dev.colour-blindness.org/api/user/'+login.trim()+'/latest');
 	xhr.onload = function () {
@@ -55,6 +59,7 @@ function getDistantProfile(login){
 		console.log("CUrrent diag=diag_ratio :" +diag_ratio);
 		/*Storing diag_ratio*/
 		localStorage['Diag_ratio'] = diag_ratio;
+		localStorage['visionary_username'] = serverResponse.email;
 
 		if (serverResponse.diag_result == "protan"){
 			param.profile_name = 'visionarize_protanope';
@@ -77,16 +82,22 @@ function getDistantProfile(login){
 /*{"diag_result":"tritan","diag_ratio":"61%","diag_serie":"0,1,2,3,4,5,6,7,15,8,14,9,13,10,11,12","email":"tritan.person@gmail.com","test_end_date":"2016-09-01 16:32:05"}*/ 
 
 function setDelta(value){
-	chrome.storage.local.set({"delta": value });
+	console.log("delta in set = "+value);
+	//chrome.storage.local.set({"delta": value });
+	localStorage['delta'] = value;
 }
 
 function setSeverity(value){
-	chrome.storage.local.set({"severity": value });
+	console.log("severity in set = "+value);
+	//chrome.storage.local.set({"severity": value });
+	localStorage['severity'] = value;
 }
 
 function clearDeltaAndSeverity(){
-	chrome.storage.local.set({"delta": -0.1 });
-	chrome.storage.local.set({"severity": -0.5 });
+	/*chrome.storage.local.set({"delta": 0 });
+	chrome.storage.local.set({"severity": 0 });*/
+	localStorage['severity'] = 0;
+	localStorage['severity'] = 0;
 }
 
 function setVisionMode(request) {
@@ -139,57 +150,20 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 });
 
-/*
-function getRemoteProfile() {
-
-	jQuery.ajax({
-		type: "GET",
-		url: "http://www.omdbapi.com/?t=star+wars&y=&plot=short&r=json",
-		contentType: "application/json; charset=utf-8",
-		dataType: "json",
-		success: function (data, status, jqXHR) {
-			alert(data);// do something
-		},
-
-		error: function (jqXHR, status) {
-			alert('nono'); // error handler
-		}
-	});
-
-};*/
-
 
 ////// INITIALIZATION //////
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
+		console.log('request in runtime '+ request.greeting);
 		param = {profile_name: "visionarize_none"};
 
 		console.log(sender.tab ?
 						"from a content script:" + sender.tab.url :
 							"from the extension");
-	 
-
- //  console.log("We are currently basculing to: " + request.profile);
- //  param.profile_name = request.profile;
-
 
 		console.log("LOGIN: "+request.login);
 		getDistantProfile(request.login);// param mail
-		
-/*
-chrome.runtime.sendMessage(request, function(response) {
-	console.log(response.farewell);
-});
-*//*
- chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
-		chrome.tabs.sendMessage(tabs[0].id, request, function (response) {
-			console.log(response.farewell);
-		});
-	});*/
-
-	 //defineCurrentColorCorrectionProfile(param);
 
 	//to delete
 		if (request.greeting == "hello")
@@ -267,20 +241,16 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 });
 
 chrome.runtime.onStartup.addListener(function () {
-
-// chrome.storage.local.set({ "currentMode":  {profile_name: "visionarize_none"} });
-
 	console.log("[Anderton:] I started up!");
 	console.log("[Anderton:] Fetching profile...");
-
-//getDistantProfile('tritan.person@gmail.com');
-
 });
 
-chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-  // Use the token.
-   console.log(token); 
-});
-
+/*************************************************************/
+/***********************GOOGLE TOKEN**************************/
+/*************************************************************/
+// chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+//   // Use the token.
+//    console.log(token); 
+// });
 
 console.log("background");

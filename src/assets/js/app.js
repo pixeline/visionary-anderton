@@ -23,15 +23,15 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	$( document )
 	.on( 'click', "#do-signout", signoff)
 	.on( 'click', "#do-signin", signin)
-	.on( "click", "#do-subscribe", register)
-	.on( "click", "#submit-test", submitTest)
+	.on( 'click', "#do-subscribe", register)
+	.on( 'click', "#submit-test", submitTest)
 	.on( 'click', "#link-to-register-user", function(){
 		goTo('subscribe');
 	})
 	.on( 'click', "#link-to-login-user", function(){
 		goTo('login');
 	})
-	.on( "click", "#js-open-website", function(){
+	.on( 'click', "#js-open-website", function(){
 		goTo('test-de-classement');
 	});
 
@@ -43,12 +43,13 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 function anderton_javascript(){
 
-/*
-	Javascript to launch when screen goes to "Anderton"
-*/
+	/*
+		Javascript to launch when screen goes to "Anderton"
+	*/
 	$("#js-diagnostic-percentage").html(localStorage["Diag_ratio"]);
 	$('#js-username').html(localStorage['visionary_username']);
-
+	$('#js-delta-slider').html(localStorage['delta']);
+	$('#js-severity-slider').html(localStorage['severity']).show();
 	// Turn ON/OFF Color Correction
 	console.log(localStorage);
 
@@ -81,9 +82,11 @@ function anderton_javascript(){
 	$('#js-delta-slider').range({
 		min: -1,
 		max: 1,
-		start: 0,
+		start: 1,
 		step: 0.1,
+		input: "#js-delta-slider",
 		onChange: function(value) {
+			console.log('severity in slider = ' + value);
 			chrome.extension.getBackgroundPage().setDelta(value);
 		}
 	});
@@ -91,63 +94,88 @@ function anderton_javascript(){
 	$('#js-severity-slider').range({
 		min: -0.5,
 		max: 0.5,
-		start: 0,
 		step: 0.1,
+		input: "#js-severity-slider",
 		onChange: function(value) {
-			//console.log('severity = ' + value);
+			console.log('severity in slider = ' + value);
 			chrome.extension.getBackgroundPage().setSeverity(value);
 		}
 	});
 }
 
+
 function signin(e) {
-
-		e.preventDefault();
-		var user = {
-			email : $("#email").val(),
-			password: $("#mdp").val()
-		}
-		
-		var request = $.ajax({
-			type: "POST",
-			url: visionary.api + '/oauth',
-			data: user,
-			async: false,
-			dataType: "json"
-		});
-			
-		request.done(function( data) {
-			
-			console.log(data);
-			
-			// return object with token
-			if (data.code && data.code === 401) {
-				$('#js-feedback').html(data.error).show();
-				localStorage['visionary_logged_in'] = 'ko';
-
-			} else if (data.token) {
-				$('#js-feedback').html('IN Local Storage').show();
-				localStorage['Anderton_token'] = data.token;
-				localStorage['visionary_logged_in'] = 'ok';
-				chrome.browserAction.setBadgeText({
-					text: "ON"
-				});
-					
-				goTo('anderton', anderton_javascript);
-			}
-			return true;
-		});
-			
-		request.fail(function( jqXHR, textStatus ) {
-			$('#js-feedback').html("Error Occured please try again in few minutes: " + textStatus).show();
-		});	
-
-/*
-		chrome.runtime.sendMessage(user, function(response) {
-			console.log(response.farewell);
-		});
-*/
+	e.preventDefault();
+	console.log(e);
+	var user = {
+		login : $("#email").val(),
+		pwd: $("#mdp").val()
 	}
+	console.log('user email'+user.login);
+	var resultToken = getToken(user);
+	console.log('Anderton_token=', localStorage['Anderton_token']);
+	$('#js-username').html(localStorage['visionary_username']);
+	//document.getElementById("js-diagnostic-percentage").innerHTML=diagratio;
+	$('js-diagnostic-percentage').html(localStorage['visionary_username']);
+	chrome.runtime.sendMessage(user, function(response) {
+		try{
+			console.log(response.farewell);
+		}catch(e){
+			console.log(e);
+		}
+	});
+}		
+/*function callback() {
+    if (chrome.runtime.lastError) {
+        console.log(chrome.runtime.lastError.message);
+    } else {
+        // Tab exists
+        console.log('everyting is fine');
+    }
+}*/
+
+function getToken(userObject){
+	console.log("userObject",userObject);
+
+	var request = $.ajax({
+		type: "POST",
+		url: visionary.api + '/oauth',
+		data: {
+			"email" : userObject.login,
+			"password" : userObject.pwd,
+		},
+		async: false,
+		dataType: "json"
+	});
+			
+	request.done(function( data) {
+		
+		console.log('data in app.js getToken '+data);
+		
+		// return object with token
+		if (data.code && data.code === 401) {
+			$('#js-feedback').html(data.error).show();
+			localStorage['visionary_logged_in'] = 'ko';
+
+		} else if (data.token) {
+			$('#js-feedback').html('IN Local Storage').show();
+			localStorage['Anderton_token'] = data.token;
+			localStorage['visionary_logged_in'] = 'ok';
+			chrome.browserAction.setBadgeText({
+				text: "ON"
+			});
+			var diagratio=localStorage["Diag_ratio"];
+			console.log('Diag ratio = '+ diagratio);
+			goTo('anderton', anderton_javascript);
+			//document.getElementById("js-diagnostic-percentage").innerHTML=diagratio;
+		}
+		return true;
+	});
+		
+	request.fail(function( jqXHR, textStatus ) {
+		$('#js-feedback').html("Error Occured please try again in few minutes: " + textStatus).show();
+	});	
+}
 
 function submitTest() {
 	var result = $("#result").val();
@@ -159,7 +187,7 @@ function register(e) {
 	e.preventDefault();
 	var request = $.ajax({
 		type: "POST",
-		url: visionary.api + '/register',
+		url: visionary.api + '/subscribe',
 		data: {
 			"email": $("#register-email").val(),
 			"password": $("#register-password").val()
@@ -169,7 +197,7 @@ function register(e) {
 	});
 	
 	request.done(function( result ){
-		console.log(result);
+		console.log('result in Register '+ result);
 		$('#js-feedback').html( result.data ).show();
 		if(result.status === 'ok'){
 			localStorage['visionary_logged_in'] = 'ok';
@@ -182,8 +210,9 @@ function register(e) {
 		$('#js-feedback').html("Erreur: " + textStatus).show();
 	});
 }
+
 function signoff() {
-	var payload = {
+	var user = {
 		login: "none",
 		pwd: "none"
 	};
@@ -204,7 +233,7 @@ function signoff() {
 
 
 function goTo(htmlPageName, callback) {
-/*
+	/*
 		This function takes care of changing the Extension screen to the right UI
 		
 		how-to:
@@ -217,5 +246,4 @@ function goTo(htmlPageName, callback) {
 	$('#ui-interactive-zone').stop().fadeOut(visionary.screen_transition_speed, function() {
 		$(this).load('./ui/' + htmlPageName + '.html').fadeIn(visionary.screen_transition_speed, callback);
 	});
-
 }

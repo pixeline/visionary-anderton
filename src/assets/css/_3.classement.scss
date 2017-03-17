@@ -149,6 +149,16 @@
     border: none;
     opacity: 0
 }
+.js-testDeClassement #cheat {
+    position: absolute;
+    right: 0;
+    top: 20px;
+    background: #ccc;
+    z-index: 1;
+    width: 100px;
+    opacity: .8;
+    padding: 10px 0
+}
 .js-testDeClassement canvas {
     max-width: 100%;
     margin: 0 auto
@@ -211,7 +221,73 @@
 .list-inline li {
     display: inline-block
 }
-
+#choices {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 65px;
+    margin: 0 auto
+}
+#choices .pick,
+#choices .pick-else {
+    display: inline-block;
+    width: 13%
+}
+#choices .pick a {
+    color: transparent
+}
+#choices .pick-else a {
+    color: #000
+}
+#choices .pick label {
+    border: 1px solid #0277BD;
+    display: block;
+    padding: 20px 0;
+    background-size: contain;
+    background-position: center;
+    text-align: center;
+    cursor: pointer;
+    -webkit-transition: all .32s ease;
+    transition: all .32s ease;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 14px
+}
+#choices .pick.active label {
+    border-width: 3px;
+    font-size: 18px;
+    font-weight: bold
+}
+#choices div a span {
+    width: 2px;
+    float: left
+}
+#pick-deutan label {
+    background-image: url(../images/test/deutan.png)
+}
+#pick-deuteranormal label {
+    background-image: url(../images/test/deuteranormal.png)
+}
+#pick-normal label {
+    background-image: url(../images/test/normal.png)
+}
+#pick-protan label {
+    background-image: url(../images/test/protan.png)
+}
+#pick-tritan-crossing label {
+    background-image: url(../images/test/tritan-crossing.png)
+}
+#pick-tritan label {
+    background-image: url(../images/test/tritan.png)
+}
 .placeholder {
     position: absolute
 }

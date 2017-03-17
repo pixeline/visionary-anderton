@@ -25,7 +25,10 @@
     ],
   "default_locale": "en",
   "background": {
-    "page": "background.html"
+    "scripts": [
+      "assets/js/bg/background.js"
+    ]
+    //"page": "background.html"
   },
   "browser_action": {
     "default_icon": "assets/images/icons/icon19.png",
