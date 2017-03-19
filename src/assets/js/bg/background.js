@@ -44,7 +44,7 @@ function updateTabs(){
 function getDistantProfile(login){
 	console.log('ojectLogin='+login);
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://dev.colour-blindness.org/api/user/'+login.trim()+'/latest');
+	xhr.open('GET', visionary.api + '/user/'+login.trim()+'/latest');
 	xhr.onload = function () {
 		var serverResponse = JSON.parse(xhr.responseText); 
 		param = {profile_name: "visionarize_none"};
@@ -59,24 +59,24 @@ function getDistantProfile(login){
 		console.log("CUrrent diag=diag_ratio :" +diag_ratio);
 		/*Storing diag_ratio*/
 		localStorage['Diag_ratio'] = diag_ratio;
+		localStorage['Diag_label'] = serverResponse.diag_result;
 		localStorage['visionary_username'] = serverResponse.email;
 
-		if (serverResponse.diag_result == "protan"){
+		if (serverResponse.diag_result === "protan"){
 			param.profile_name = 'visionarize_protanope';
-			setVisionMode(param)
-		} else if (serverResponse.diag_result == "deutan"){
+			setVisionMode(param);
+		} else if (serverResponse.diag_result === "deutan"){
 			param.profile_name = 'visionarize_deuteranope';
 			setVisionMode(param);
-		} else if (serverResponse.diag_result == "tritan"){
+		} else if (serverResponse.diag_result === "tritan"){
 			param.profile_name = 'visionarize_tritanope';
 			setVisionMode(param);
 		}
-		
-		else setVisionMode(param);
+		else {setVisionMode(param);}
+		localStorage['profile_name']  = param.profile_name;
 		
 	};
 	console.log("xhr :" +xhr);
-	//alert("xhr :" +xhr);
 	xhr.send();
 };
 /*{"diag_result":"tritan","diag_ratio":"61%","diag_serie":"0,1,2,3,4,5,6,7,15,8,14,9,13,10,11,12","email":"tritan.person@gmail.com","test_end_date":"2016-09-01 16:32:05"}*/ 
@@ -97,20 +97,19 @@ function clearDeltaAndSeverity(){
 	/*chrome.storage.local.set({"delta": 0 });
 	chrome.storage.local.set({"severity": 0 });*/
 	localStorage['severity'] = 0;
-	localStorage['severity'] = 0;
 }
 
 function setVisionMode(request) {
 	chrome.storage.local.set({ "currentMode": request });
 	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
-		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+// 		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
 			chrome.tabs.sendMessage(tabs[0].id, request, function (response) {
 				// console.log(response.farewell);.
 				console.log("tabs id: " +tabs[0].id);
 			});
-		});
+// 		});
 
 
 	});
@@ -119,35 +118,25 @@ function setVisionMode(request) {
 
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
-	param = {profile_name: "visionarize_none"};
-
-	if (info.menuItemId === "anderton_item2a"){
-
-		param.profile_name = "visionarize_protanope";
-		setVisionMode(param);
-	 
+	switch ( info.menuItemId ) {
+		
+		case  "anderton_item2a":
+			var profile_name = "visionarize_protanope"; 
+		break;
+		
+		case "anderton_item2b":
+			var profile_name = "visionarize_deuteranope";
+		break;
+		
+		case "anderton_item2c":
+			var profile_name = "visionarize_tritanope";
+		break;
+		
+		default:
+			var profile_name = "visionarize_none";
+		break;
 	}
-
-	if (info.menuItemId === "anderton_item2b"){
-
-		param.profile_name = "visionarize_deuteranope";
-		setVisionMode(param);
-	 
-	}
-
-	if (info.menuItemId === "anderton_item2c"){
-
-		param.profile_name = "visionarize_tritanope";
-		setVisionMode(param);
-	 
-	}
-	if (info.menuItemId === "anderton_item2d"){
-
-		param.profile_name = "visionarize_none";
-		setVisionMode(param);
-	 
-	}
-
+	setVisionMode({ profile_name: profile_name });
 });
 
 
@@ -166,10 +155,12 @@ chrome.runtime.onMessage.addListener(
 		getDistantProfile(request.login);// param mail
 
 	//to delete
+/*
 		if (request.greeting == "hello")
 		alert(request.greeting);
 			sendResponse({farewell: "goodbye"});
-	}	);
+*/
+	});
 
 chrome.runtime.onInstalled.addListener(function () {
 
@@ -244,13 +235,3 @@ chrome.runtime.onStartup.addListener(function () {
 	console.log("[Anderton:] I started up!");
 	console.log("[Anderton:] Fetching profile...");
 });
-
-/*************************************************************/
-/***********************GOOGLE TOKEN**************************/
-/*************************************************************/
-// chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-//   // Use the token.
-//    console.log(token); 
-// });
-
-console.log("background");
