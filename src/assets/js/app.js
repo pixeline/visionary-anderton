@@ -80,7 +80,7 @@ function anderton_javascript(){
 	}
 	console.log(localStorage);
 
-	$('#js-status-indicator').checkbox().checkbox({
+	$('#js-status-indicator').checkbox({
 		onChecked: function() {
 			$('#js-status-indicator-label').text('activée');
 			$("#js-severity-slider-div").removeClass("hide");
@@ -112,7 +112,7 @@ function anderton_javascript(){
 	});
 
 	// Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
-	if( 'inactive' == localStorage['anderton_active'] ){
+	if( 'inactive' === localStorage['anderton_active'] ){
 		$('#js-status-indicator').checkbox('uncheck');
 			param = {
 				profile_name: "visionarize_none"

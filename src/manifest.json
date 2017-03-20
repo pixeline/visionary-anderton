@@ -16,10 +16,6 @@
     "tabs",
     "storage",
     "identity",
-    "http://*/*",
-    "https://*/*",
-    "https://accounts.google.com/*", 
-    "https://www.googleapis.com/*",
     "https://dev.colour-blindness.org/*",
     "https://test-your.colour-blindness.org/*"
     ],
