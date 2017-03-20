@@ -1,8 +1,6 @@
 // Get Global Extension Config values.
 var visionary = chrome.extension.getBackgroundPage().config();
 
-console.log(visionary);
-
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	chrome.extension.getBackgroundPage().updateTabs();
 });

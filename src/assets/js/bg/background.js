@@ -231,6 +231,4 @@ chrome.runtime.onStartup.addListener(function () {
 	console.log("[Anderton:] Fetching profile...");
 });
 
-
-
 console.log("background");
