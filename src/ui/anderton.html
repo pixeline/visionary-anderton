@@ -36,7 +36,11 @@
 	
 
 	<div class="ui-strata" id="js-diagnostic-div">
-		<p>Votre vision est à <strong><span id="js-diagnostic-percentage"></span><span id="js-diagnostic-label"></span></strong></p>
+		<p>Votre vision est à 
+			<strong><span id="js-diagnostic-percentage"></span></strong> 
+			<span id="js-diagnostic-label"></span>
+			
+		</p>
 	</div>
 
 	<div class="ui-strata hide">
@@ -44,10 +48,12 @@
 			<p><button type="submit" class="ui icon button js-open-bugreport" data-url="//check-your.colour-blindness.org"><i class="send icon"></i> Soumettre cette page</button></p>
 	</div>
 	
-	<div style="margin-top:2rem;font-size:88%; color:#999">
-		<p>
-		<button id="do-signout" type="submit" class="ui js-submit-login button-as-link" style="float:right;">Se déconnecter</button>
-		<span id="js-username"></span>
-		</p>
+	<div style="margin-top:2rem;font-size:88%; color:#999; overflow: hidden;clear:both" class="clearfix cf">
+	
+		<button id="do-signout" type="submit" class="ui js-submit-login button-as-link" style="float:right;"><i class="fa fa-sign-out" aria-hidden="true"></i></button>
+
+		<span id="js-username" style="padding:float:left;display:inline-block;padding: 4px 0 3px;"></span>
+
+		
 	</div>
 </div>

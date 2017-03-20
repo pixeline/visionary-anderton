@@ -1,30 +1,13 @@
-///// LIBRARIES ///////////
-//alert ('We are in background');
-
-/*************************************************************/
-/***********************TWITTER*******************************/
-/*************************************************************/
-/*var oauthTwitter = ChromeExOAuth.initBackgroundPage({
-  'request_url': 'https://api.twitter.com/oauth/request_token',
-  'authorize_url': 'https://api.twitter.com/oauth/authorize',
-  'access_url': 'https://api.twitter.com/oauth/access_token',
-  'consumer_key':  "qA4aWLn5URoF7LCMRADl4HhEz",
-  'consumer_secret': 'nEeKjZOsVzFiGQjwMAdKy4PuOwy7gHozf2PyXihniTzfywntzZ',
-  'scope': '_twitter',
-  'app_name': 'twitter'
-});
-
-function authenticateTwitter(){
-	oauthTwitter.authorize(function() {
-		return localStorage['oauth_token_secret_twitter'];
-	});
+var visionary = {
+	api: 'https://dev.colour-blindness.org/api',
+	screen_transition_speed: "fast",
+	user_is_logged_in : localStorage["visionary_logged_in"]
 };
 
-function logoutTwitter(){
-	oauthTwitter.clearTokens();
-};*/
-/************************************************************/
-
+///// LIBRARIES ///////////
+function config(){
+	return visionary;
+}
 function updateTabs(){
 	chrome.windows.getAll({'populate': true}, function(windows) {
 		for (var i = 0; i < windows.length; i++) {
@@ -44,7 +27,7 @@ function updateTabs(){
 function getDistantProfile(login){
 	console.log('ojectLogin='+login);
 	var xhr = new XMLHttpRequest();
-	xhr.open('GET', 'https://dev.colour-blindness.org/api/user/'+login.trim()+'/latest');
+	xhr.open('GET', visionary.api + '/user/'+login.trim()+'/latest');
 	xhr.onload = function () {
 		var serverResponse = JSON.parse(xhr.responseText); 
 		param = {profile_name: "visionarize_none"};
@@ -59,21 +42,29 @@ function getDistantProfile(login){
 		console.log("CUrrent diag=diag_ratio :" +diag_ratio);
 		/*Storing diag_ratio*/
 		localStorage['Diag_ratio'] = diag_ratio;
+		localStorage['Diag_label'] = serverResponse.diag_result;
 		localStorage['visionary_username'] = serverResponse.email;
+		localStorage['profile_name'] = serverResponse.diag_result;
+	
+		var param = {profile_name: "visionarize_none"};
+		switch (serverResponse.diag_result){
+			case 'protan':
+				param.profile_name = 'visionarize_protanope';
+			break;
 
-		if (serverResponse.diag_result == "protan"){
-			param.profile_name = 'visionarize_protanope';
-			setVisionMode(param)
-		} else if (serverResponse.diag_result == "deutan"){
-			param.profile_name = 'visionarize_deuteranope';
-			setVisionMode(param);
-		} else if (serverResponse.diag_result == "tritan"){
-			param.profile_name = 'visionarize_tritanope';
-			setVisionMode(param);
+			case 'deutan':
+				param.profile_name = 'visionarize_deuteranope';
+			break;
+
+			case 'tritan':
+				param.profile_name = 'visionarize_tritanope';
+			break;
+			default: 
+				setVisionMode(param);
 		}
-		
-		else setVisionMode(param);
-		
+		localStorage['profile_name']  = param.profile_name;
+		console.log('setVisionMode Asynchrone');
+
 	};
 	console.log("xhr :" +xhr);
 	//alert("xhr :" +xhr);
@@ -96,25 +87,18 @@ function setSeverity(value){
 function clearDeltaAndSeverity(){
 	/*chrome.storage.local.set({"delta": 0 });
 	chrome.storage.local.set({"severity": 0 });*/
-	localStorage['severity'] = 0;
+	localStorage['delta'] = 0;
 	localStorage['severity'] = 0;
 }
 
 function setVisionMode(request) {
 	chrome.storage.local.set({ "currentMode": request });
 	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
-		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
-			chrome.tabs.sendMessage(tabs[0].id, request, function (response) {
-				// console.log(response.farewell);.
-				console.log("tabs id: " +tabs[0].id);
-			});
+		chrome.tabs.sendMessage(tabs[0].id, request, function (response) {
+			// console.log(response.farewell);.
+			console.log("tabs id: " +tabs[0].id);
 		});
-
-
 	});
-
 };
 
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
@@ -164,12 +148,14 @@ chrome.runtime.onMessage.addListener(
 
 		console.log("LOGIN: "+request.login);
 		getDistantProfile(request.login);// param mail
+		console.log('setVisionMode Synchrone');
+		setVisionMode(param);
 
 	//to delete
 		if (request.greeting == "hello")
 		alert(request.greeting);
 			sendResponse({farewell: "goodbye"});
-	}	);
+});
 
 chrome.runtime.onInstalled.addListener(function () {
 
@@ -245,12 +231,6 @@ chrome.runtime.onStartup.addListener(function () {
 	console.log("[Anderton:] Fetching profile...");
 });
 
-/*************************************************************/
-/***********************GOOGLE TOKEN**************************/
-/*************************************************************/
-// chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-//   // Use the token.
-//    console.log(token); 
-// });
+
 
 console.log("background");

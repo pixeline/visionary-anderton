@@ -112,6 +112,7 @@ function onExtensionMessage(request) {
 	var changed = false;
 	
 	if (request['severity'] !== undefined) {
+
 			changed = true;
 	}
 
@@ -148,9 +149,8 @@ chrome.runtime.onMessage.addListener(
 	}
 );
 
-/**************************************************************************************************************/
-/*
-Inittialize
+/**************************************************************************************************************
+Initialize
 */
 console.log('[Anderton:] "Better keep your eyes open", he informed young Witwer. "It might happen to you at any time."');
 
@@ -200,6 +200,9 @@ var cssContent =
 function prepareFilter(){
 	var delta, severity;
 	chrome.storage.local.get('delta', function (val){
+		console.log('++++++++ INSIDE mutagen.js+++++++');
+		console.log(val);
+		
 		delta = val.delta;
 	});
 	chrome.storage.local.get('severity', function (val){
