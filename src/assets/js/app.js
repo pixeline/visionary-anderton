@@ -1,8 +1,7 @@
-var visionary = {
-	api: 'https://dev.colour-blindness.org/api',
-	screen_transition_speed: "fast",
-	user_is_logged_in : localStorage["visionary_logged_in"]
-};
+// Get Global Extension Config values.
+var visionary = chrome.extension.getBackgroundPage().config();
+
+console.log(visionary);
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	chrome.extension.getBackgroundPage().updateTabs();
@@ -71,9 +70,13 @@ function anderton_javascript(){
 	// Set initial values.
 	if (typeof localStorage['delta'] === 'undefined' ){
 		localStorage['delta'] = 0;
+		chrome.storage.local.set({"delta": 0 });
+
 	}
 	if (typeof localStorage['severity'] === 'undefined' ){
 		localStorage['severity'] = 0;
+	chrome.storage.local.set({"severity": 0 });
+
 	}
 	console.log(localStorage);
 
@@ -139,6 +142,7 @@ function anderton_javascript(){
 		onChange: function(value) {
 			console.log('delta slider = ' + value);
 			localStorage['delta'] = value;
+			chrome.storage.local.set({"delta": value });
 			chrome.extension.getBackgroundPage().setDelta(value);
 		} 
 	});
@@ -152,6 +156,7 @@ function anderton_javascript(){
 		onChange: function(value) {
 			console.log('severity slider = ' + value);
 			localStorage['severity'] = value;
+			chrome.storage.local.set({"severity": value });
 			chrome.extension.getBackgroundPage().setSeverity(value);
 		}
 	});
@@ -197,7 +202,7 @@ function signin(e) {
 			localStorage["Diag_ratio"] = data.test.diag_ratio;
 			localStorage["Diag_label"] = data.test.diag_result;
 			localStorage['visionary_username'] = data.user.email;
-			
+
 			console.log('Diag ratio = '+ localStorage["Diag_ratio"]);
 			console.log('Diag_label=' + localStorage['Diag_label']);
 			
