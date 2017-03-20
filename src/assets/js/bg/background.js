@@ -30,6 +30,7 @@ function getDistantProfile(login){
 	xhr.open('GET', visionary.api + '/user/'+login.trim()+'/latest');
 	xhr.onload = function () {
 		var serverResponse = JSON.parse(xhr.responseText); 
+		param = {profile_name: "visionarize_none"};
 		console.log("serverResponse :" +serverResponse);
 		//serverResponse = {profile_name: "visionarize_none"};
 		console.log("CUrrent profile :" +serverResponse.diag_result);
@@ -58,31 +59,36 @@ function getDistantProfile(login){
 			case 'tritan':
 				param.profile_name = 'visionarize_tritanope';
 			break;
+			default: 
+				setVisionMode(param);
 		}
 		localStorage['profile_name']  = param.profile_name;
 		console.log('setVisionMode Asynchrone');
 
-		setVisionMode(param);
 	};
 	console.log("xhr :" +xhr);
+	//alert("xhr :" +xhr);
 	xhr.send();
 };
 /*{"diag_result":"tritan","diag_ratio":"61%","diag_serie":"0,1,2,3,4,5,6,7,15,8,14,9,13,10,11,12","email":"tritan.person@gmail.com","test_end_date":"2016-09-01 16:32:05"}*/ 
 
 function setDelta(value){
 	console.log("delta in set = "+value);
+	//chrome.storage.local.set({"delta": value });
 	localStorage['delta'] = value;
 }
 
 function setSeverity(value){
 	console.log("severity in set = "+value);
+	//chrome.storage.local.set({"severity": value });
 	localStorage['severity'] = value;
 }
 
 function clearDeltaAndSeverity(){
-	localStorage['severity'] = 0;
+	/*chrome.storage.local.set({"delta": 0 });
+	chrome.storage.local.set({"severity": 0 });*/
 	localStorage['delta'] = 0;
-
+	localStorage['severity'] = 0;
 }
 
 function setVisionMode(request) {
@@ -97,25 +103,35 @@ function setVisionMode(request) {
 
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
-	switch ( info.menuItemId ) {
-		
-		case  "anderton_item2a":
-			var profile_name = "visionarize_protanope"; 
-		break;
-		
-		case "anderton_item2b":
-			var profile_name = "visionarize_deuteranope";
-		break;
-		
-		case "anderton_item2c":
-			var profile_name = "visionarize_tritanope";
-		break;
-		
-		default:
-			var profile_name = "visionarize_none";
-		break;
+	param = {profile_name: "visionarize_none"};
+
+	if (info.menuItemId === "anderton_item2a"){
+
+		param.profile_name = "visionarize_protanope";
+		setVisionMode(param);
+	 
 	}
-	setVisionMode({ profile_name: profile_name });
+
+	if (info.menuItemId === "anderton_item2b"){
+
+		param.profile_name = "visionarize_deuteranope";
+		setVisionMode(param);
+	 
+	}
+
+	if (info.menuItemId === "anderton_item2c"){
+
+		param.profile_name = "visionarize_tritanope";
+		setVisionMode(param);
+	 
+	}
+	if (info.menuItemId === "anderton_item2d"){
+
+		param.profile_name = "visionarize_none";
+		setVisionMode(param);
+	 
+	}
+
 });
 
 
@@ -134,7 +150,12 @@ chrome.runtime.onMessage.addListener(
 		getDistantProfile(request.login);// param mail
 		console.log('setVisionMode Synchrone');
 		setVisionMode(param);
-	});
+
+	//to delete
+		if (request.greeting == "hello")
+		alert(request.greeting);
+			sendResponse({farewell: "goodbye"});
+});
 
 chrome.runtime.onInstalled.addListener(function () {
 
@@ -193,7 +214,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.storage.local.get('currentMode', function (result) {
 	 	if (typeof result.currentMode === "undefined"){
 	 		//alert("No trace Please LogIn");
-			param = {profile_name: "visionarize_none"} ;
+			param = 	{profile_name: "visionarize_none"} ;
 		} else {
 			//alert("remember you");
 			param = result.currentMode;
@@ -209,3 +230,5 @@ chrome.runtime.onStartup.addListener(function () {
 	console.log("[Anderton:] I started up!");
 	console.log("[Anderton:] Fetching profile...");
 });
+
+console.log("background");

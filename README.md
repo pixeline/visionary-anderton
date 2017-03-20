@@ -14,7 +14,7 @@ Captain of Master branch: Saria Hatoum
 To Install Gulp, in your Terminal type:
 
 1. `npm install --global gulp-cli`
-2. `npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml jshint gulp-jshint gulp-strip-debug gulp-zip --save-dev`
+2. `npm install gulp gulp-minify-css gulp-uglify gulp-clean gulp-cleanhtml jshint gulp-jshint gulp-strip-debug gulp-zip gulp-sass --save-dev`
 3. `npm update` to install remaining packages.
 
 ## starting your work...

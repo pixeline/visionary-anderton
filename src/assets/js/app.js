@@ -1,8 +1,6 @@
 // Get Global Extension Config values.
 var visionary = chrome.extension.getBackgroundPage().config();
 
-console.log(visionary);
-
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	chrome.extension.getBackgroundPage().updateTabs();
 });
@@ -47,7 +45,6 @@ function anderton_javascript(){
 	*/
 	$("#js-diagnostic-percentage").html(localStorage["Diag_ratio"]);
 	
-	
 	switch (localStorage['Diag_label']){
 		case 'deutan':
 		var diag_label = '<strong>deutéranope</strong> <small>(difficulté à percevoir le vert)</small>';
@@ -90,6 +87,8 @@ function anderton_javascript(){
 			param = {
 				profile_name: localStorage['profile_name']
 			};
+			$('#js-delta-slider').range('set value' , localStorage['delta']);
+			$('#js-severity-slider').range('set value' , localStorage['severity']);
 			chrome.extension.getBackgroundPage().setVisionMode( param );
 			chrome.browserAction.setBadgeText({
 				text: "ON"
@@ -101,6 +100,8 @@ function anderton_javascript(){
 			$("#js-delta-slider-div").addClass("hide");
 			$('#js-diagnostic-div').addClass('hide');
 			localStorage['anderton_active'] = 'inactive';
+			$('#js-delta-slider').range('set value' , 0);
+			$('#js-severity-slider').range('set value' , 0);
 			param = {
 				profile_name: "visionarize_none"
 			};
@@ -114,25 +115,31 @@ function anderton_javascript(){
 	// Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
 	if( 'inactive' === localStorage['anderton_active'] ){
 		$('#js-status-indicator').checkbox('uncheck');
-			param = {
-				profile_name: "visionarize_none"
-			};
-			chrome.extension.getBackgroundPage().setVisionMode( param );
-			chrome.browserAction.setBadgeText({
-				text: "OFF"
-			});
-	} else{
-		$('#js-status-indicator').checkbox('check');
-		$('#js-status-indicator-label').text('activée');
+		$('#js-delta-slider').range('set value' , 0);
+		$('#js-severity-slider').range('set value' , 0);
+		
 		param = {
 			profile_name: "visionarize_none"
 		};
+		chrome.extension.getBackgroundPage().setVisionMode( param );
+		chrome.browserAction.setBadgeText({
+			text: "OFF"
+		});
+	} else{
+		$('#js-status-indicator').checkbox('check');
+		$('#js-status-indicator-label').text('activée');
+		$('#js-delta-slider').range('set value' , localStorage['delta']);
+		$('#js-severity-slider').range('set value' , localStorage['severity']);
+		param = {
+				profile_name: localStorage['profile_name']
+			};
 		chrome.extension.getBackgroundPage().setVisionMode( param );
 		chrome.browserAction.setBadgeText({
 			text: "ON"
 		});
 	}
 	
+	// utiliser "uncheck" pour la mettre en mode "désactivé".
 	$('#js-delta-slider').range({
 		min: -1,
 		max: 1,
@@ -140,21 +147,21 @@ function anderton_javascript(){
 		step: 0.1,
 		input: "#js-delta-slider",
 		onChange: function(value) {
-			console.log('delta slider = ' + value);
+			console.log('delta in slider = ' + value);
 			localStorage['delta'] = value;
 			chrome.storage.local.set({"delta": value });
 			chrome.extension.getBackgroundPage().setDelta(value);
-		} 
+		}
 	});
 
 	$('#js-severity-slider').range({
-		min: -1,
-		max: 1,
+		min: -0.5,
+		max: 0.5,
 		start: localStorage['severity'],
 		step: 0.1,
 		input: "#js-severity-slider",
 		onChange: function(value) {
-			console.log('severity slider = ' + value);
+			console.log('severity in slider = ' + value);
 			localStorage['severity'] = value;
 			chrome.storage.local.set({"severity": value });
 			chrome.extension.getBackgroundPage().setSeverity(value);
@@ -165,11 +172,12 @@ function anderton_javascript(){
 
 function signin(e) {
 	e.preventDefault();
-
+	console.log(e);
 	var user = {
 		login : $("#email").val(),
 		pwd: $("#mdp").val()
 	}
+	console.log('user email'+user.login);
 	
 	var request = $.ajax({
 		type: "POST",
@@ -194,15 +202,13 @@ function signin(e) {
 			localStorage['visionary_logged_in'] = 'ko';
 
 		} else if (data.token) {
-			
+			$('#js-feedback').html('IN Local Storage').show();
 			// User is recognized, log her in...
-			
 			localStorage['visionary_logged_in'] = 'ok';
 			localStorage['Anderton_token'] = data.token;
 			localStorage["Diag_ratio"] = data.test.diag_ratio;
 			localStorage["Diag_label"] = data.test.diag_result;
 			localStorage['visionary_username'] = data.user.email;
-
 			console.log('Diag ratio = '+ localStorage["Diag_ratio"]);
 			console.log('Diag_label=' + localStorage['Diag_label']);
 			
@@ -213,20 +219,18 @@ function signin(e) {
 					console.log(e);
 				}
 			});
-			
+			var diagratio=localStorage["Diag_ratio"];
+			console.log('Diag ratio = '+ diagratio);
 			goTo('anderton', anderton_javascript);
 			
-		}
+			}
 		return true;
 	});
 		
 	request.fail(function( jqXHR, textStatus ) {
 		$('#js-feedback').html("Error Occured please try again in few minutes: " + textStatus).show();
 	});	
-
-
-}		
-
+}
 
 function submitTest() {
 	var result = $("#result").val();
