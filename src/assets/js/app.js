@@ -132,10 +132,9 @@ function anderton_javascript(){
 		$('#js-status-indicator-label').text('activée');
 		$('#js-delta-slider').range('set value' , localStorage['delta']);
 		$('#js-severity-slider').range('set value' , localStorage['severity']);
-		
 		param = {
-			profile_name: "visionarize_none"
-		};
+				profile_name: localStorage['profile_name']
+			};
 		chrome.extension.getBackgroundPage().setVisionMode( param );
 		chrome.browserAction.setBadgeText({
 			text: "ON"
