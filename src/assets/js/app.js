@@ -1,15 +1,34 @@
 // Get Global Extension Config values.
-var visionary = chrome.extension.getBackgroundPage().config();
+//var visionary = chrome.extension.getBackgroundPage().config();
+var visionary = {
+	api: 'https://dev.colour-blindness.org/api',
+	screen_transition_speed: "fast",
+	user_is_logged_in : localStorage["visionary_logged_in"],
+	data: []
+};
+
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
 	chrome.extension.getBackgroundPage().updateTabs();
 });
 
+function set(key,value){
+	return chrome.extension.getBackgroundPage().set(key, value);
+}
+function get(key){
+	return chrome.extension.getBackgroundPage().get(key);
+}
+
+function exposeAll(){
+	return chrome.extension.getBackgroundPage().exposeAll();
+}
+
+
 (function($) {
 
 	// Set Startup screen
 		
-	if( localStorage['visionary_logged_in'] !=='ok' ){
+	if( get('visionary_logged_in') !=='ok' ){
 		goTo('login');
 	} else{
 		goTo('anderton', anderton_javascript);
@@ -43,9 +62,9 @@ function anderton_javascript(){
 	/*
 		Javascript to launch when screen goes to "Anderton"
 	*/
-	$("#js-diagnostic-percentage").html(localStorage["Diag_ratio"]);
+	$("#js-diagnostic-percentage").html(get("Diag_ratio"));
 	
-	switch (localStorage['Diag_label']){
+	switch (get('Diag_label')){
 		case 'deutan':
 		var diag_label = '<strong>deutéranope</strong> <small>(difficulté à percevoir le vert)</small>';
 		break;
@@ -59,47 +78,44 @@ function anderton_javascript(){
 	
 	$('#js-diagnostic-label').html(diag_label);
 	
-	$('#js-username').html(localStorage['visionary_username']);
-	$('#js-delta-slider').html(localStorage['delta']);
-	$('#js-severity-slider').html(localStorage['severity']).show();
+	$('#js-username').html(get('visionary_username'));
+	$('#js-delta-slider').html( get('delta') );
+	$('#js-severity-slider').html( get('severity') ).show();
 	// Turn ON/OFF Color Correction
 	
 	// Set initial values.
-	if (typeof localStorage['delta'] === 'undefined' ){
-		localStorage['delta'] = 0;
-		chrome.storage.local.set({"delta": 0 });
-
+	if (typeof get('delta') == 'undefined' ){
+		set('delta', 0) ;
+		//chrome.storage.local.set({"delta": 0 });
 	}
-	if (typeof localStorage['severity'] === 'undefined' ){
-		localStorage['severity'] = 0;
-	chrome.storage.local.set({"severity": 0 });
-
+	if (typeof get('severity') == 'undefined' ){
+		set('severity', 0);
+		// chrome.storage.local.set({"severity": 0 });
 	}
-	console.log(localStorage);
-
-	$('#js-status-indicator').checkbox({
-		onChecked: function() {
+	
+	$('#anderton-status').on('change', function(){
+		if( $(this).is(':checked')){
 			$('#js-status-indicator-label').text('activée');
 			$("#js-severity-slider-div").removeClass("hide");
 			$("#js-delta-slider-div").removeClass("hide");
 			$('#js-diagnostic-div').removeClass('hide');
-			localStorage['anderton_active'] = 'active';
+			set('anderton_active', 'active');
 			param = {
-				profile_name: localStorage['profile_name']
+				profile_name: get('profile_name')
 			};
-			$('#js-delta-slider').range('set value' , localStorage['delta']);
-			$('#js-severity-slider').range('set value' , localStorage['severity']);
+			$('#js-delta-slider').range('set value' , get('delta') );
+			$('#js-severity-slider').range('set value' , get( 'severity') );
 			chrome.extension.getBackgroundPage().setVisionMode( param );
 			chrome.browserAction.setBadgeText({
 				text: "ON"
 			});
-		},
-		onUnchecked: function() {
+		}
+		 else {
 			$('#js-status-indicator-label').text('désactivée');
 			$("#js-severity-slider-div").addClass("hide");
 			$("#js-delta-slider-div").addClass("hide");
 			$('#js-diagnostic-div').addClass('hide');
-			localStorage['anderton_active'] = 'inactive';
+			set('anderton_active', 'inactive');
 			$('#js-delta-slider').range('set value' , 0);
 			$('#js-severity-slider').range('set value' , 0);
 			param = {
@@ -108,13 +124,13 @@ function anderton_javascript(){
 			chrome.extension.getBackgroundPage().setVisionMode(param);
 			chrome.browserAction.setBadgeText({
 				text: "OFF"
-			});
-		}
+			}); 
+			 
+		 }
 	});
 
 	// Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
-	if( 'inactive' === localStorage['anderton_active'] ){
-		$('#js-status-indicator').checkbox('uncheck');
+	if( 'inactive' === get('anderton_active') ){
 		$('#js-delta-slider').range('set value' , 0);
 		$('#js-severity-slider').range('set value' , 0);
 		
@@ -126,12 +142,11 @@ function anderton_javascript(){
 			text: "OFF"
 		});
 	} else{
-		$('#js-status-indicator').checkbox('check');
 		$('#js-status-indicator-label').text('activée');
-		$('#js-delta-slider').range('set value' , localStorage['delta']);
-		$('#js-severity-slider').range('set value' , localStorage['severity']);
+		$('#js-delta-slider').range('set value' , get('delta') );
+		$('#js-severity-slider').range('set value' , get('severity') );
 		param = {
-				profile_name: localStorage['profile_name']
+				profile_name: get('profile_name')
 			};
 		chrome.extension.getBackgroundPage().setVisionMode( param );
 		chrome.browserAction.setBadgeText({
@@ -143,13 +158,13 @@ function anderton_javascript(){
 	$('#js-delta-slider').range({
 		min: -1,
 		max: 1,
-		start: localStorage['delta'],
+		start: get('delta'),
 		step: 0.1,
 		input: "#js-delta-slider",
 		onChange: function(value) {
 			console.log('delta in slider = ' + value);
-			localStorage['delta'] = value;
-			chrome.storage.local.set({"delta": value });
+			set('delta', value);
+			// chrome.storage.local.set({"delta": value });
 			chrome.extension.getBackgroundPage().setDelta(value);
 		}
 	});
@@ -157,13 +172,13 @@ function anderton_javascript(){
 	$('#js-severity-slider').range({
 		min: -0.5,
 		max: 0.5,
-		start: localStorage['severity'],
+		start: get('severity'),
 		step: 0.1,
 		input: "#js-severity-slider",
 		onChange: function(value) {
 			console.log('severity in slider = ' + value);
-			localStorage['severity'] = value;
-			chrome.storage.local.set({"severity": value });
+			set('severity', value);
+			// chrome.storage.local.set({"severity": value });
 			chrome.extension.getBackgroundPage().setSeverity(value);
 		}
 	});
@@ -199,18 +214,20 @@ function signin(e) {
 		// return object with token
 		if (data.code && data.code === 401) {
 			$('#js-feedback').html(data.error).show();
-			localStorage['visionary_logged_in'] = 'ko';
+			set('visionary_logged_in', 'ko');
 
 		} else if (data.token) {
 			$('#js-feedback').html('IN Local Storage').show();
 			// User is recognized, log her in...
-			localStorage['visionary_logged_in'] = 'ok';
-			localStorage['Anderton_token'] = data.token;
-			localStorage["Diag_ratio"] = data.test.diag_ratio;
-			localStorage["Diag_label"] = data.test.diag_result;
-			localStorage['visionary_username'] = data.user.email;
+			set('visionary_logged_in','ok') ;
+			set('Anderton_token', data.token) ;
+			set('Diag_ratio', data.test.diag_ratio);
+			set('Diag_label', data.test.diag_result);
+			set('visionary_username',data.user.email);
+/*
 			console.log('Diag ratio = '+ localStorage["Diag_ratio"]);
 			console.log('Diag_label=' + localStorage['Diag_label']);
+*/
 			
 			chrome.runtime.sendMessage(user, function(response) {
 				try{
@@ -219,8 +236,8 @@ function signin(e) {
 					console.log(e);
 				}
 			});
-			var diagratio=localStorage["Diag_ratio"];
-			console.log('Diag ratio = '+ diagratio);
+			var diagratio= get('Diag_ratio');
+// 			console.log('Diag ratio = '+ diagratio);
 			goTo('anderton', anderton_javascript);
 			
 			}
@@ -255,9 +272,9 @@ function register(e) {
 		console.log('result in Register '+ result);
 		$('#js-feedback').html( result.data ).show();
 		if(result.status === 'ok'){
-			localStorage['visionary_logged_in'] = 'ok';
-			localStorage['visionary_username'] = result.data.email;
-			localStorage['visionary_userid'] = result.data.id;
+			set('visionary_logged_in', 'ok');
+			set('visionary_username', result.data.email );
+			set('visionary_userid', result.data.id );
 			goTo('test-de-classement');
 		}
 	});
@@ -274,8 +291,8 @@ function signoff() {
 	chrome.browserAction.setBadgeText({
 		text: "OFF"
 	});
-	localStorage.clear();
-
+	//localStorage.clear();
+	chrome.extension.getBackgroundPage().reset();
 	param = {
 		profile_name: "visionarize_none"
 	};

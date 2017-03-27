@@ -1,13 +1,39 @@
 var visionary = {
 	api: 'https://dev.colour-blindness.org/api',
 	screen_transition_speed: "fast",
-	user_is_logged_in : localStorage["visionary_logged_in"]
+	user_is_logged_in : localStorage["visionary_logged_in"],
+	data: []
 };
 
 ///// LIBRARIES ///////////
 function config(){
 	return visionary;
 }
+function reset(){
+	//visionary.data = [];
+	chrome.storage.clear();
+}
+function set(key, value){
+	chrome.storage.sync.set({ key : value}, function() {
+		return value;
+	});
+	//return value;
+}
+function get(key){
+	return chrome.storage.sync.get(key, function(result){
+		return result[key];
+	});
+/*
+	if( typeof visionary.data[key] === 'undefined'){
+		return '';
+	}
+	return visionary.data[key];
+*/
+}
+function exposeAll(){
+	chrome.storage.sync.get(null, function(all) {console.log(all)});
+}
+
 function updateTabs(){
 	chrome.windows.getAll({'populate': true}, function(windows) {
 		for (var i = 0; i < windows.length; i++) {
@@ -41,10 +67,10 @@ function getDistantProfile(login){
 		var diag_ratio = serverResponse.diag_ratio;
 		console.log("CUrrent diag=diag_ratio :" +diag_ratio);
 		/*Storing diag_ratio*/
-		localStorage['Diag_ratio'] = diag_ratio;
-		localStorage['Diag_label'] = serverResponse.diag_result;
-		localStorage['visionary_username'] = serverResponse.email;
-		localStorage['profile_name'] = serverResponse.diag_result;
+		set('Diag_ratio', diag_ratio);
+		set('Diag_label', serverResponse.diag_result);
+		set('visionary_username', serverResponse.email);
+		set('profile_name', serverResponse.diag_result);
 	
 		var param = {profile_name: "visionarize_none"};
 		switch (serverResponse.diag_result){
@@ -62,7 +88,7 @@ function getDistantProfile(login){
 			default: 
 				setVisionMode(param);
 		}
-		localStorage['profile_name']  = param.profile_name;
+		set('profile_name', param.profile_name) ;
 		console.log('setVisionMode Asynchrone');
 
 	};
@@ -75,20 +101,19 @@ function getDistantProfile(login){
 function setDelta(value){
 	console.log("delta in set = "+value);
 	//chrome.storage.local.set({"delta": value });
-	localStorage['delta'] = value;
+	set('delta', value);
 }
 
 function setSeverity(value){
 	console.log("severity in set = "+value);
-	//chrome.storage.local.set({"severity": value });
-	localStorage['severity'] = value;
+	set('severity', value);
 }
 
 function clearDeltaAndSeverity(){
 	/*chrome.storage.local.set({"delta": 0 });
 	chrome.storage.local.set({"severity": 0 });*/
-	localStorage['delta'] = 0;
-	localStorage['severity'] = 0;
+	set('delta', 0);
+	set('severity', 0);
 }
 
 function setVisionMode(request) {

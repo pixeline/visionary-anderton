@@ -55,7 +55,7 @@ gulp.task('scripts', function() {
 	gulp.src(project.src_dir + '/assets/js/vendors/**/*.js')
 	.pipe(gulp.dest(project.build_dir + '/assets/js/vendors'));
 
-	return gulp.src([project.src_dir + '/assets/js/*.js'])
+	return gulp.src([project.src_dir + '/assets/js/**/*.js', '!'+project.src_dir + '/assets/js/vendors/**/*.js'])
 
 	.pipe(gulp.dest(project.build_dir + '/assets/js'));
 });
