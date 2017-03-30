@@ -71,7 +71,9 @@ function getDistantProfile(login){
 	xhr.send();
 };
 /*{"diag_result":"tritan","diag_ratio":"61%","diag_serie":"0,1,2,3,4,5,6,7,15,8,14,9,13,10,11,12","email":"tritan.person@gmail.com","test_end_date":"2016-09-01 16:32:05"}*/ 
-
+function reset(){
+	localStorage.clear();
+};
 function setDelta(value){
 	console.log("delta in set = "+value);
 	//chrome.storage.local.set({"delta": value });

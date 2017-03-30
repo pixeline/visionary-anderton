@@ -18,8 +18,6 @@
     "identity",
     "http://*/*",
     "https://*/*",
-    "https://accounts.google.com/*", 
-    "https://www.googleapis.com/*",
     "https://dev.colour-blindness.org/*",
     "https://test-your.colour-blindness.org/*"
     ],
@@ -47,7 +45,7 @@
     {
       "matches": ["https://*/*", "http://*/*"],
       "js": [
-        "assets/js/vendors/jquery-3.1.1.min.js",
+        "assets/js/jquery-1.12.0.min.js",
         "assets/js/contentscript/notify.min.js",
         "assets/js/contentscript/Vibrant.js",
         "assets/js/contentscript/color-thief.min.js",

@@ -21,6 +21,7 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	.on( 'click', "#do-signout", signoff)
 	.on( 'click', "#do-signin", signin)
 	.on( 'click', "#do-subscribe", register)
+	.on( 'click', "#do-refresh", refresh)
 	.on( 'click', "#submit-test", submitTest)
 	.on( 'click', "#link-to-register-user", function(){
 		goTo('subscribe');
@@ -36,7 +37,9 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 })(jQuery);
 
 
-// Helpers. --------------------------------------------------------
+function refresh(){
+	window.location.reload();
+};
 
 function anderton_javascript(){
 
@@ -67,13 +70,9 @@ function anderton_javascript(){
 	// Set initial values.
 	if (typeof localStorage['delta'] === 'undefined' ){
 		localStorage['delta'] = 0;
-		chrome.storage.local.set({"delta": 0 });
-
 	}
 	if (typeof localStorage['severity'] === 'undefined' ){
 		localStorage['severity'] = 0;
-	chrome.storage.local.set({"severity": 0 });
-
 	}
 	console.log(localStorage);
 
@@ -100,8 +99,6 @@ function anderton_javascript(){
 			$("#js-delta-slider-div").addClass("hide");
 			$('#js-diagnostic-div').addClass('hide');
 			localStorage['anderton_active'] = 'inactive';
-			$('#js-delta-slider').range('set value' , 0);
-			$('#js-severity-slider').range('set value' , 0);
 			param = {
 				profile_name: "visionarize_none"
 			};
@@ -115,9 +112,6 @@ function anderton_javascript(){
 	// Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
 	if( 'inactive' == localStorage['anderton_active'] ){
 		$('#js-status-indicator').checkbox('uncheck');
-		$('#js-delta-slider').range('set value' , 0);
-		$('#js-severity-slider').range('set value' , 0);
-		
 		param = {
 			profile_name: "visionarize_none"
 		};
