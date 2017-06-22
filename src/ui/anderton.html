@@ -42,14 +42,41 @@
 			
 		</p>
 	</div>
-
+	
 	<button class="refresh-help hide" id="do-refresh" type="submit" >Refresh</button>
+		
+	<div id="cropinfo">
+		<input type="hidden" id="imagecrop" name="imagecrop">
+	</div>
+
+	
+	<div id="js-take-screenshot-div" class="ui-strata">
+		<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
+		<button id="take-screenshot" class="pure-u-23-24 ui primary button js-submit-login">Screenshot</button>
+		
+	</div>
+
+	<div id="page" class="hide">
+	  <div id="demo-basic"></div>
+	</div>
+	
+	<div id="js-send-crop-div" align="center" class="ui-strata hide">
+		<p align="left">Veuillez centrer le rectangle sur la zone problématique</p>
+		 <button id="croping" class="ui primary button js-submit-login"><i class="send icon"></i> Soumettre cette page</button> 
+	
+	</div>
+	
+	<div id="js-receive-data-tracker" class="ui-strata hide">
+		<p></p>
+	</div>
 	
 	<div class="ui-strata hide">
 			<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
 			<p><button type="submit" class="ui icon button js-open-bugreport" data-url="//check-your.colour-blindness.org"><i class="send icon"></i> Soumettre cette page</button></p>
 	</div>
 	
+	<div id="selection"></div>
+		
 	<div style="margin-top:2rem;font-size:88%; color:#999; overflow: hidden;clear:both" class="clearfix cf">
 	
 		<button id="do-signout" type="submit" class="ui js-submit-login button-as-link" style="float:right;"><i class="fa fa-sign-out" aria-hidden="true"></i></button>

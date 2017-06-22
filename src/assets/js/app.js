@@ -23,7 +23,11 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	.on( 'click', "#do-subscribe", register)
 	.on( 'click', "#do-refresh", refresh)
 	.on( 'click', "#submit-test", submitTest)
-	.on( 'click', "#link-to-register-user", function(){
+	.on( 'click', "#take-screenshot", takeScreenshot)
+	.on( 'click', "#print-help", reportBug)
+	.on( 'click', "#do-forget", forgetPasswordOrNoEmail)
+	.on( 'click', "#link-to-register-user", forgetPasswordOrNoEmail)
+	/*.on( 'click', "#link-to-register-user", function(){
 		goTo('subscribe');
 	})
 	.on( 'click', "#link-to-login-user", function(){
@@ -31,14 +35,116 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	})
 	.on( 'click', "#js-open-website", function(){
 		goTo('test-de-classement');
-	});
+	});*/
 
 	// FIN
 })(jQuery);
 
 
+function forgetPasswordOrNoEmail(){
+	var newURL = "https://test-your.colour-blindness.org/";
+    chrome.tabs.create({ url: newURL });
+}
+
+function takeScreenshot(){
+	$('#page').removeClass("hide");
+	$('#js-send-crop-div').removeClass("hide");
+	$('#js-take-screenshot-div').addClass("hide");
+	localStorage['operating_system'] = window.navigator.platform;
+	localStorage['browser'] = window.navigator.userAgent.match(/Chrom(?:e|ium)\/([0-9\.]+)/);
+	localStorage['user_agent'] = window.navigator.userAgent;
+	localStorage['screen_height'] = window.screen.availHeight;
+	localStorage['screen_width'] = window.screen.availWidth;
+	chrome.tabs.captureVisibleTab(function(screenshot) {
+		scuri = screenshot;
+		localStorage['screenshot'] = scuri;
+		basic = $('#demo-basic').croppie({
+			viewport: {
+				width: 150,
+				height: 200
+			}
+		});
+		basic.croppie('bind', {
+			url: localStorage['screenshot'],
+			points: [77, 469, 280, 739]
+		});
+	
+		$('#js-send-crop-div').on('click', function (ev) {
+				basic.croppie('result', {
+				type: 'canvas',
+				size: 'original'
+			}).then(function (resp) {
+				$('#croping').val(resp);
+				$('#form').submit();
+				localStorage['screenshot_cropped_result'] = resp;
+				var txt;
+				var screenshot_description = prompt("Veuillez entrer votre motif");
+				if (screenshot_description == null ) {
+					txt = "User cancelled the prompt.";
+				} else if( screenshot_description == ""){
+					txt = "User send a blank prompt.";
+				} else{
+					txt = screenshot_description;
+				}
+				localStorage['screenshot_description'] = txt;
+				sendCROP();
+				
+			});
+		});
+	});
+}
+
+
+function sendCROP(){
+	console.log('_________________________________');
+	console.log('In send Crop');
+	console.log('_________________________________');
+				
+	var request = $.ajax({
+		type: "POST",
+		url: visionary.api + '/bugtracker/add',
+		data: {
+			'profile_name': localStorage['profile_name'],
+			'user_email': localStorage['user_email'],
+			'diag_ratio': localStorage["Diag_ratio"],
+			'diag_label': localStorage["Diag_label"],
+			'delta': localStorage['delta'],
+			'severity': localStorage['severity'],
+			'user_agent': localStorage['user_agent'],
+			'browser': localStorage['browser'],
+			'operating_system':localStorage['operating_system'],
+			'screen_height': localStorage['screen_height'],
+			'screen_width': localStorage['screen_width'],
+			'page_url': localStorage['page_url'],
+			'page_title':localStorage['page_title'],
+			'screenshot':localStorage['screenshot'],
+			'screenshot_description': localStorage['screenshot_description'],
+			'screenshot_cropped_result': localStorage['screenshot_cropped_result']
+		},
+		async: false,
+		dataType: "json"
+	});
+	
+	request.done(function( data ){
+		if(data.status == 'error'){
+			console.log('error in sending data tracker to server');
+		} else {
+			console.log('everything seems to be perfect data are stocked in our DB');
+		}
+		return true;
+	});
+	request.fail(function( jqXHR, textStatus ) {
+		console.log(textStatus);
+	});
+	
+}
+
 function refresh(){
 	window.location.reload();
+};
+
+function reportBug(){
+	$('#hidden-demo').croppie('bind');
 };
 
 function anderton_javascript(){
@@ -62,7 +168,7 @@ function anderton_javascript(){
 	
 	$('#js-diagnostic-label').html(diag_label);
 	
-	$('#js-username').html(localStorage['visionary_username']);
+	$('#js-username').html(localStorage['user_email']);
 	$('#js-delta-slider').html(localStorage['delta']);
 	$('#js-severity-slider').html(localStorage['severity']).show();
 	// Turn ON/OFF Color Correction
@@ -86,8 +192,6 @@ function anderton_javascript(){
 			param = {
 				profile_name: localStorage['profile_name']
 			};
-			$('#js-delta-slider').range('set value' , localStorage['delta']);
-			$('#js-severity-slider').range('set value' , localStorage['severity']);
 			chrome.extension.getBackgroundPage().setVisionMode( param );
 			chrome.browserAction.setBadgeText({
 				text: "ON"
@@ -108,8 +212,10 @@ function anderton_javascript(){
 			});
 		}
 	});
-
-	// Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
+	
+	/*
+		Voir documentation: http://semantic-ui.com/modules/checkbox.html#/definition
+	*/
 	if( 'inactive' == localStorage['anderton_active'] ){
 		$('#js-status-indicator').checkbox('uncheck');
 		param = {
@@ -133,7 +239,9 @@ function anderton_javascript(){
 		});
 	}
 	
-	// utiliser "uncheck" pour la mettre en mode "désactivé".
+	/*
+		utiliser "uncheck" pour la mettre en mode "désactivé".
+	*/
 	$('#js-delta-slider').range({
 		min: -1,
 		max: 1,
@@ -163,7 +271,9 @@ function anderton_javascript(){
 	});
 }
 
-
+/*
+	
+*/
 function signin(e) {
 	e.preventDefault();
 	console.log(e);
@@ -190,7 +300,9 @@ function signin(e) {
 		console.log(data);
 		console.log('++++++++++++++++++++++++++++++++++');
 
-		// return object with token
+		/*
+			return object with token
+		*/
 		if (data.code && data.code === 401) {
 			$('#js-feedback').html(data.error).show();
 			localStorage['visionary_logged_in'] = 'ko';
@@ -202,7 +314,7 @@ function signin(e) {
 			localStorage['Anderton_token'] = data.token;
 			localStorage["Diag_ratio"] = data.test.diag_ratio;
 			localStorage["Diag_label"] = data.test.diag_result;
-			localStorage['visionary_username'] = data.user.email;
+			localStorage['user_email'] = data.user.email;
 			console.log('Diag ratio = '+ localStorage["Diag_ratio"]);
 			console.log('Diag_label=' + localStorage['Diag_label']);
 			
@@ -250,7 +362,7 @@ function register(e) {
 		$('#js-feedback').html( result.data ).show();
 		if(result.status === 'ok'){
 			localStorage['visionary_logged_in'] = 'ok';
-			localStorage['visionary_username'] = result.data.email;
+			localStorage['user_email'] = result.data.email;
 			localStorage['visionary_userid'] = result.data.id;
 			goTo('test-de-classement');
 		}
@@ -280,17 +392,21 @@ function signoff() {
 	goTo('login');
 }
 
+chrome.tabs.getSelected(null,function(tab) { // null defaults to current window
+	var page_title = tab.title;
+	localStorage['page_title'] = page_title;
+	console.log('title of the current page: '+ page_title);
+});
+
+
+chrome.tabs.query({currentWindow: true, active: true}, function(tabs){
+    
+	var page_url = tabs[0].url;
+	localStorage['page_url'] = page_url;
+	console.log('current page url: '+page_url);
+});
 
 function goTo(htmlPageName, callback) {
-	/*
-		This function takes care of changing the Extension screen to the right UI
-		
-		how-to:
-		- Give your screen a short descriptive lowercase, no-space filename (ex: "login", "delete-user", ...)
-		- create the interface html in a specific html file inside folder "/ui" using EXACTLY the same name (with .html as extension) .
-		
-		If you need special javascript for that screen, wrap it into a function and use it as the Callback.
-	*/
 	
 	$('#ui-interactive-zone').stop().fadeOut(visionary.screen_transition_speed, function() {
 		$(this).load('./ui/' + htmlPageName + '.html').fadeIn(visionary.screen_transition_speed, callback);
