@@ -51,8 +51,8 @@ function defineSVGMatrix (typeCVD, amountDalto, amountTransf){
 	// amountDalto = 1er slider : Left gives values : -1 ; -1 to Right 0 ; 0 / and more than enhancer : 1 ; 1
 	// amountTransf = 2e slider : Left gives values : -0.5 ; 0.5 to Right 0.5 ; -0.5
 
-	var	amountG = amountDalto+amountTransf,
-		amountB = amountDalto-amountTransf;
+	var	amountG = parseFloat(amountDalto)+parseFloat(amountTransf); 
+	var amountB = parseFloat(amountDalto)-parseFloat(amountTransf);
 
 	var R1 = (valA-(1.44748099512696*valA*cvda)-(0.279715681385635*valA*cvdb)-(0.00242482044796114*valA*cvdc)+2.3337320435016*valA*cvdd+0.45097756096085*valA*cvde+0.0039094683786494*valA*cvdf-(2.0872527906384*valA*cvdg)-(0.4033471517229*valA*cvdh)-(0.0034965662857356*valA*cvdi)+0.1832683754604*valB*cvda+0.035415344789275*valB*cvdb+0.0003070112186461*valB*cvdc-(0.96599520599184*valB*cvdd)-(0.18667188596529*valB*cvde)-(0.00161823535922556*valB*cvdf)+2.0317036543392*valB*cvdg+0.3926126657002*valB*cvdh+0.0034035103616728*valB*cvdi+0.0065323859640912*valC*cvda+0.0012623383637997*valC*cvdb+1.09430542528908e-5*valC*cvdc+0.073704362532456*valC*cvdd+0.0142428578034985*valC*cvde+0.000123469562622454*valC*cvdf-(12.401648348772*valC*cvdg)-(2.39653268668825*valC*cvdh)-(0.020775243755023*valC*cvdi)+1)  ,
 		R2 = (-(3.52238668926119*valA*cvda)-(2.19807886050366*valA*cvdb)-(0.0149187902480011*valA*cvdc)+5.6790429124849*valA*cvdd+3.5438994281586*valA*cvde+0.024053137118381*valA*cvdf-(5.0792455801626*valA*cvdg)-(3.1696072356564*valA*cvdh)-(0.021512742953394*valA*cvdi)+valB+0.44597620863935*valB*cvda+0.2783030266059*valB*cvdb+0.0018888969608515*valB*cvdc-(2.35071041825826*valB*cvdd)-(1.46691642155364*valB*cvde)-(0.0099562480663194*valB*cvdf)+4.9440689947988*valB*cvdg+3.0852528416232*valB*cvdh+0.020940213216772*valB*cvdi+0.0158962980837018*valC*cvda+0.0099197844701652*valC*cvdb+6.7327513345842e-5*valC*cvdc+0.179356597011509*valC*cvdd+0.111924095552826*valC*cvde+0.00075965068189921*valC*cvdf-(30.1789116511205*valC*cvdg)-(18.832579607337*valC*cvdh)-(0.127820393544145*valC*cvdi)),

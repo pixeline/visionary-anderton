@@ -1,6 +1,7 @@
 {
   "name": "Anderton Extension",
   "version": "{VERSION}",
+  "web_accessible_resources": ["*.jpg","*.JPG"],
   "manifest_version": 2,
   "description": "This extension adapts the content of visited pages to the specific needs of VISIONARY users...",
   "homepage_url": "https://colour-blindness.org/",
@@ -16,6 +17,7 @@
     "tabs",
     "storage",
     "identity",
+    "activeTab",
     "http://*/*",
     "https://*/*",
     "https://dev.colour-blindness.org/*",
@@ -26,7 +28,6 @@
     "scripts": [
       "assets/js/bg/background.js"
     ]
-    //"page": "background.html"
   },
   "browser_action": {
     "default_icon": "assets/images/icons/icon19.png",

@@ -32,7 +32,6 @@ function getDistantProfile(login){
 		var serverResponse = JSON.parse(xhr.responseText); 
 		param = {profile_name: "visionarize_none"};
 		console.log("serverResponse :" +serverResponse);
-		//serverResponse = {profile_name: "visionarize_none"};
 		console.log("CUrrent profile :" +serverResponse.diag_result);
 		
 		chrome.storage.local.set({ "currentSession": serverResponse });
@@ -97,7 +96,6 @@ function setVisionMode(request) {
 	chrome.storage.local.set({ "currentMode": request });
 	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 		chrome.tabs.sendMessage(tabs[0].id, request, function (response) {
-			// console.log(response.farewell);.
 			console.log("tabs id: " +tabs[0].id);
 		});
 	});
@@ -139,25 +137,27 @@ chrome.contextMenus.onClicked.addListener(function(info, tab) {
 
 ////// INITIALIZATION //////
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		console.log('request in runtime '+ request.greeting);
-		param = {profile_name: "visionarize_none"};
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	console.log('request in runtime '+ request.greeting);
+	param = {profile_name: "visionarize_none"};
 
-		console.log(sender.tab ?
-						"from a content script:" + sender.tab.url :
-							"from the extension");
+	console.log(sender.tab ?
+					"from a content script:" + sender.tab.url :
+						"from the extension");
 
-		console.log("LOGIN: "+request.login);
-		getDistantProfile(request.login);// param mail
-		console.log('setVisionMode Synchrone');
-		setVisionMode(param);
+	console.log("LOGIN: "+request.login);
+	getDistantProfile(request.login);// param mail
+	console.log('setVisionMode Synchrone');
+	setVisionMode(param);
+	if (request.name == 'screenshot') {
+        chrome.tabs.captureVisibleTab(null, null, function(dataUrl) {
+            sendResponse({ screenshotUrl: dataUrl });
+        });
+    }
+    return true;
 
-	//to delete
-		if (request.greeting == "hello")
-		alert(request.greeting);
-			sendResponse({farewell: "goodbye"});
 });
+
 
 chrome.runtime.onInstalled.addListener(function () {
 
@@ -234,3 +234,4 @@ chrome.runtime.onStartup.addListener(function () {
 });
 
 console.log("background");
+
