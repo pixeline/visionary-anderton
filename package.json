@@ -1,6 +1,6 @@
 {
   "name": "visionary-anderton",
-  "version": "2.2.9",
+  "version": "2.3.1",
   "description": "Visionary Chrome Extension",
   "main": "gulpfile.js",
   "dependencies": {
