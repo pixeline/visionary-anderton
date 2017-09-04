@@ -64,14 +64,14 @@ function takeScreenshot() {
 		} else {
 			txt = screenshot_description;
 		}
+		localStorage['screenshot_description'] = txt;
+		
 		basic.croppie('result', {
 				type: 'canvas',
 				size: 'original'
 			}).then(function (resp) {
 				localStorage['screenshot_cropped_result'] = resp;
 			});
-			
-			localStorage['screenshot_description'] = txt;
 			
 			
 			var request = $.ajax({
@@ -95,13 +95,7 @@ function takeScreenshot() {
 					'screenshot': localStorage['screenshot'],
 					'screenshot_cropped_result': localStorage['screenshot_cropped_result']
 				},
-
-				beforeSend: function() {
-					console.log("url : " + visionary.api + '/bugtracker/add');
-					console.log("data to be sent:");
-					console.log(this.data);
-				},
-				async: true,
+				async: false,
 				cache: false,
 				dataType: "json"
 			});
