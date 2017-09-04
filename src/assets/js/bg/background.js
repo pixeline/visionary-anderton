@@ -1,5 +1,7 @@
 var visionary = {
-	api: 'https://dev.colour-blindness.org/api',
+	//api: 'https://dev.colour-blindness.org/api',
+	//api: 'https://test-your.colour-blindness.org/api',
+	api: 'http://colour-blindness.loc/api',
 	screen_transition_speed: "fast",
 	user_is_logged_in : localStorage["visionary_logged_in"]
 };

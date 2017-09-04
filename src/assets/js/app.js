@@ -27,15 +27,6 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 	.on( 'click', "#print-help", reportBug)
 	.on( 'click', "#do-forget", forgetPasswordOrNoEmail)
 	.on( 'click', "#link-to-register-user", forgetPasswordOrNoEmail)
-	/*.on( 'click', "#link-to-register-user", function(){
-		goTo('subscribe');
-	})
-	.on( 'click', "#link-to-login-user", function(){
-		goTo('login');
-	})
-	.on( 'click', "#js-open-website", function(){
-		goTo('test-de-classement');
-	});*/
 
 	// FIN
 })(jQuery);
@@ -78,7 +69,7 @@ function takeScreenshot(){
 				$('#form').submit();
 				localStorage['screenshot_cropped_result'] = resp;
 				var txt;
-				var screenshot_description = prompt("Veuillez entrer votre motif");
+				var screenshot_description = prompt("Veuillez décrire le problème rencontré :");
 				if (screenshot_description == null ) {
 					txt = "User cancelled the prompt.";
 				} else if( screenshot_description == ""){
@@ -97,7 +88,7 @@ function takeScreenshot(){
 
 function sendCROP(){
 	console.log('_________________________________');
-	console.log('In send Crop');
+	console.log('send Crop');
 	console.log('_________________________________');
 				
 	var request = $.ajax({
@@ -117,19 +108,27 @@ function sendCROP(){
 			'screen_width': localStorage['screen_width'],
 			'page_url': localStorage['page_url'],
 			'page_title':localStorage['page_title'],
-			'screenshot':localStorage['screenshot'],
 			'screenshot_description': localStorage['screenshot_description'],
+			'screenshot':localStorage['screenshot'],
 			'screenshot_cropped_result': localStorage['screenshot_cropped_result']
 		},
+		
+		beforeSend: function(){
+			console.log("url : "+  visionary.api + '/bugtracker/add' );	
+			console.log("data sent:");
+			console.log(this.data);
+		},
 		async: false,
+		cache: false,
 		dataType: "json"
 	});
 	
 	request.done(function( data ){
+		console.log(data);
 		if(data.status == 'error'){
 			console.log('error in sending data tracker to server');
 		} else {
-			console.log('everything seems to be perfect data are stocked in our DB');
+			console.log('everything seems to be perfect, data are stocked in our DB');
 		}
 		return true;
 	});
@@ -152,6 +151,7 @@ function anderton_javascript(){
 	/*
 		Javascript to launch when screen goes to "Anderton"
 	*/
+	$('#js-current-page-title').html(localStorage['page_title']);
 	$("#js-diagnostic-percentage").html(localStorage["Diag_ratio"]);
 	
 	switch (localStorage['Diag_label']){
@@ -308,13 +308,14 @@ function signin(e) {
 			localStorage['visionary_logged_in'] = 'ko';
 
 		} else if (data.token) {
-			$('#js-feedback').html('IN Local Storage').show();
+			//$('#js-feedback').html('').show();
 			// User is recognized, log her in...
 			localStorage['visionary_logged_in'] = 'ok';
 			localStorage['Anderton_token'] = data.token;
 			localStorage["Diag_ratio"] = data.test.diag_ratio;
 			localStorage["Diag_label"] = data.test.diag_result;
 			localStorage['user_email'] = data.user.email;
+			localStorage['profile_name'] = data.user.email;
 			console.log('Diag ratio = '+ localStorage["Diag_ratio"]);
 			console.log('Diag_label=' + localStorage['Diag_label']);
 			
@@ -341,7 +342,7 @@ function signin(e) {
 function submitTest() {
 	var result = $("#result").val();
 	var ratio = $("#ratio").val();
-	alert("result = " + result + " - ratio = " + ratio);
+	// alert("result = " + result + " - ratio = " + ratio);
 }
 
 function register(e) {
@@ -363,6 +364,7 @@ function register(e) {
 		if(result.status === 'ok'){
 			localStorage['visionary_logged_in'] = 'ok';
 			localStorage['user_email'] = result.data.email;
+			localStorage['profile_name'] = result.data.email;
 			localStorage['visionary_userid'] = result.data.id;
 			goTo('test-de-classement');
 		}
