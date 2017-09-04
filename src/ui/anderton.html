@@ -16,6 +16,7 @@
 		<p>Ajuster l'intensité du contraste</p>
 		 <div class="ui range" id="js-severity-slider" value="0"></div>
 	</div>
+<!--
 	
 	<div class="hidden">
 		<div class="pure-u-sm-1-2">	
@@ -32,9 +33,7 @@
 			</div>
 		</div>
 	</div>
-		
-	
-
+-->
 	<div class="ui-strata" id="js-diagnostic-div">
 		<p>Votre vision est à 
 			<strong><span id="js-diagnostic-percentage"></span></strong> 
@@ -43,28 +42,19 @@
 		</p>
 	</div>
 	
-	<button class="refresh-help hide" id="do-refresh" type="submit" >Refresh</button>
+<!-- 	<button class="refresh-help hide" id="do-refresh" type="submit" >Refresh</button> -->
 		
-	<div id="cropinfo">
-		<input type="hidden" id="imagecrop" name="imagecrop">
-	</div>
-
-	
 	<div id="js-take-screenshot-div" class="ui-strata">
-		<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> ne vous semble pas claire? </p>
-		<button id="take-screenshot" class="pure-u-23-24 ui primary button js-submit-login">Screenshot</button>
-		
-	</div>
-
-	<div id="page" class="hide">
-	  <div id="js-crop-area"></div>
+		<p>Cette page <q id="js-current-page-title" class="voice--error">Site de la Pomme</q> est visuellement confuse? </p>
+		<button id="take-screenshot" class="pure-u-23-24 ui primary button">Rapportez-la à Visionary</button>
 	</div>
 	
-	<div id="js-send-crop-div" align="center" class="ui-strata hide">
-		<p>Veuillez décrire le problème :</p>
-		<textarea name="screenshot_description" id="js-screenshot-description"></textarea>
-		<p align="left">Veuillez centrer le rectangle sur la zone problématique</p>
-		 <button id="js-submit-crop" class="ui primary button js-submit-crop"><i class="send icon"></i> Soumettre cette page</button> 
+	<div id="js-send-bug-div" align="center" class="ui ui-strata hide">
+		<div class="field">
+			<label>Veuillez décrire le problème :</label>
+			<textarea name="screenshot_description" id="js-screenshot-description" style="line-height:1.3;width:100%;"></textarea>
+		</div>
+		 <button id="js-submit-bug" class="ui primary button js-submit-crop"><i class="send icon"></i> <span class="send-label">	Soumettre cette page</span></button> 
 	
 	</div>
 	
