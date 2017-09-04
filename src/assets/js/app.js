@@ -46,30 +46,30 @@ function takeScreenshot(){
 	localStorage['user_agent'] = window.navigator.userAgent;
 	localStorage['screen_height'] = window.screen.availHeight;
 	localStorage['screen_width'] = window.screen.availWidth;
+	
 	chrome.tabs.captureVisibleTab(function(screenshot) {
-		scuri = screenshot;
-		localStorage['screenshot'] = scuri;
-		basic = $('#demo-basic').croppie({
+		localStorage['screenshot'] = screenshot;
+		cropzone = $('#js-crop-area').croppie({
 			viewport: {
 				width: 150,
 				height: 200
 			}
 		});
-		basic.croppie('bind', {
+		cropzone.croppie('bind', {
 			url: localStorage['screenshot'],
 			points: [77, 469, 280, 739]
 		});
 	
 		$('#js-send-crop-div').on('click', function (ev) {
-				basic.croppie('result', {
+				cropzone.croppie('result', {
 				type: 'canvas',
-				size: 'original'
+				size: 'original',
+				format: 'jpeg',
 			}).then(function (resp) {
-				$('#croping').val(resp);
-				$('#form').submit();
+				//$('#js-submit-crop').val(resp);
 				localStorage['screenshot_cropped_result'] = resp;
 				var txt;
-				var screenshot_description = prompt("Veuillez décrire le problème rencontré :");
+				var screenshot_description = $('#js-screenshot-description').val();
 				if (screenshot_description == null ) {
 					txt = "User cancelled the prompt.";
 				} else if( screenshot_description == ""){
