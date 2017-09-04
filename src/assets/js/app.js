@@ -37,9 +37,22 @@ function takeScreenshot() {
 	localStorage['user_agent'] = window.navigator.userAgent;
 	localStorage['screen_height'] = window.screen.availHeight;
 	localStorage['screen_width'] = window.screen.availWidth;
-	
 	var button_label = $('#js-submit-bug span.send-label').text();
 
+	chrome.tabs.captureVisibleTab(function(screenshot) {
+		localStorage['screenshot'] = screenshot;
+		basic = $('#demo-basic').croppie({
+			viewport: {
+				width: 150,
+				height: 200
+			}
+		});
+		basic.croppie('bind', {
+			url: localStorage['screenshot'],
+			points: [77, 469, 280, 739]
+		});
+	});
+	
 	$('#js-submit-bug').on('click', function() {
 		$(this).find('span.send-label').text('Un instant...');
 		var txt;
@@ -51,9 +64,16 @@ function takeScreenshot() {
 		} else {
 			txt = screenshot_description;
 		}
-		chrome.tabs.captureVisibleTab(function(screenshot) {
-			localStorage['screenshot'] = screenshot;
+		basic.croppie('result', {
+				type: 'canvas',
+				size: 'original'
+			}).then(function (resp) {
+				localStorage['screenshot_cropped_result'] = resp;
+			});
+			
 			localStorage['screenshot_description'] = txt;
+			
+			
 			var request = $.ajax({
 				type: "POST",
 				url: visionary.api + '/bugtracker/add',
@@ -73,7 +93,7 @@ function takeScreenshot() {
 					'page_title': localStorage['page_title'],
 					'screenshot_description': localStorage['screenshot_description'],
 					'screenshot': localStorage['screenshot'],
-				//	'screenshot_cropped_result': localStorage['screenshot_cropped_result']
+					'screenshot_cropped_result': localStorage['screenshot_cropped_result']
 				},
 
 				beforeSend: function() {
@@ -93,13 +113,14 @@ function takeScreenshot() {
 					console.log('everything seems to be perfect, data are stocked in our DB');
 				}
 				$('#js-submit-bug span.send-label').text(button_label);
-				$('#js-screenshot-description').val('Merci pour votre message, nous allons l\'examiner.');
+				$('#js-screenshot-description').val('');
+				$('#js-send-bug-div').empty().html('<h3>Merci pour votre message, nous allons l\'examiner.</h3>');
 				return true;
 			});
 			request.fail(function(jqXHR, textStatus) {
 				console.log(textStatus);
 			});
-		});
+		
 
 	});
 }
