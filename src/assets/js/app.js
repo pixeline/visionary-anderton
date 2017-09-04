@@ -49,7 +49,7 @@ function takeScreenshot(){
 	
 	chrome.tabs.captureVisibleTab(function(screenshot) {
 		localStorage['screenshot'] = screenshot;
-		cropzone = $('#js-crop-area').croppie({
+		cropzone = $('#demo-basic').croppie({
 			viewport: {
 				width: 150,
 				height: 200
