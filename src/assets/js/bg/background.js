@@ -218,15 +218,15 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 	chrome.storage.local.get('currentMode', function (result) {
 	 	if (typeof result.currentMode === "undefined"){
 	 		//alert("No trace Please LogIn");
-			param = 	{profile_name: "visionarize_none"} ;
+			param = {profile_name: "visionarize_none"} ;
 		} else {
 			//alert("remember you");
 			param = result.currentMode;
 
 		};
-			setVisionMode(param);
-		});
-		console.log("[Anderton:] Detecting a Tab change");
+		setVisionMode(param);
+	});
+	console.log("[Anderton:] Detecting a Tab change");
 	
 });
 

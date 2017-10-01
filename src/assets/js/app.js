@@ -52,7 +52,7 @@ function takeScreenshot() {
 			points: [77, 469, 280, 739]
 		});
 	});
-	
+
 	$('#js-submit-bug').on('click', function() {
 		$(this).find('span.send-label').text('Un instant...');
 		var txt;
@@ -65,56 +65,56 @@ function takeScreenshot() {
 			txt = screenshot_description;
 		}
 		localStorage['screenshot_description'] = txt;
-		
+
 		basic.croppie('result', {
-				type: 'canvas',
-				size: 'original'
-			}).then(function (resp) {
-				localStorage['screenshot_cropped_result'] = resp;
-			});
-			
-			
-			var request = $.ajax({
-				type: "POST",
-				url: visionary.api + '/bugtracker/add',
-				data: {
-					'profile_name': localStorage['profile_name'],
-					'user_email': localStorage['user_email'],
-					'diag_ratio': localStorage["Diag_ratio"],
-					'diag_label': localStorage["Diag_label"],
-					'delta': localStorage['delta'],
-					'severity': localStorage['severity'],
-					'user_agent': localStorage['user_agent'],
-					'browser': localStorage['browser'],
-					'operating_system': localStorage['operating_system'],
-					'screen_height': localStorage['screen_height'],
-					'screen_width': localStorage['screen_width'],
-					'page_url': localStorage['page_url'],
-					'page_title': localStorage['page_title'],
-					'screenshot_description': localStorage['screenshot_description'],
-					'screenshot': localStorage['screenshot'],
-					'screenshot_cropped_result': localStorage['screenshot_cropped_result']
-				},
-				async: false,
-				cache: false,
-				dataType: "json"
-			});
-			request.done(function(data) {
-				console.log(data);
-				if (data.status == 'error') {
-					console.log('error in sending data tracker to server');
-				} else {
-					console.log('everything seems to be perfect, data are stocked in our DB');
-				}
-				$('#js-submit-bug span.send-label').text(button_label);
-				$('#js-screenshot-description').val('');
-				$('#js-send-bug-div').empty().html('<h3>Merci pour votre message, nous allons l\'examiner.</h3>');
-				return true;
-			});
-			request.fail(function(jqXHR, textStatus) {
-				console.log(textStatus);
-			});
-		
+			type: 'canvas',
+			size: 'original'
+		}).then(function(resp) {
+			localStorage['screenshot_cropped_result'] = resp;
+		});
+
+
+		var request = $.ajax({
+			type: "POST",
+			url: visionary.api + '/bugtracker/add',
+			data: {
+				'profile_name': localStorage['profile_name'],
+				'user_email': localStorage['user_email'],
+				'diag_ratio': localStorage["Diag_ratio"],
+				'diag_label': localStorage["Diag_label"],
+				'delta': localStorage['delta'],
+				'severity': localStorage['severity'],
+				'user_agent': localStorage['user_agent'],
+				'browser': localStorage['browser'],
+				'operating_system': localStorage['operating_system'],
+				'screen_height': localStorage['screen_height'],
+				'screen_width': localStorage['screen_width'],
+				'page_url': localStorage['page_url'],
+				'page_title': localStorage['page_title'],
+				'screenshot_description': localStorage['screenshot_description'],
+				'screenshot': localStorage['screenshot'],
+				'screenshot_cropped_result': localStorage['screenshot_cropped_result']
+			},
+			async: false,
+			cache: false,
+			dataType: "json"
+		});
+		request.done(function(data) {
+			console.log(data);
+			if (data.status == 'error') {
+				console.log('error in sending data tracker to server');
+			} else {
+				console.log('everything seems to be perfect, data are stocked in our DB');
+			}
+			$('#js-submit-bug span.send-label').text(button_label);
+			$('#js-screenshot-description').val('');
+			$('#js-send-bug-div').empty().html('<h3>Merci pour votre message, nous allons l\'examiner.</h3>');
+			return true;
+		});
+		request.fail(function(jqXHR, textStatus) {
+			console.log(textStatus);
+		});
+
 
 	});
 }
