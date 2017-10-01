@@ -5,9 +5,9 @@ Captain of Master branch: Saria Hatoum
 
 ## file organisation
 
-`/src` folder = "source" folder, where you spend all your time. :-)
-`/build` folder = "build" folder. You shouldn't need to go inside: when gulp is running, it compiles all files from the `src` folder into the `build` folder.
-`/distr` folder = "distribution" folder. When a release is ready, it is zipped into this folder, ready for submission or testing in the browser.
+`/src` folder = "source" folder  
+`/build` folder = "build" folder. You shouldn't need to go inside: when gulp is running, it compiles all files from the `src` folder into the `build` folder.  
+`/distr` folder = "distribution" folder. When a release is ready, it is zipped into this folder, ready for submission or testing in the browser.  
 
 ## setup your dev environment
 
