@@ -1,7 +1,11 @@
 # visionary-anderton
 
-Visionary chrome extension.
-Captain of Master branch: Saria Hatoum
+Chrome extension, part of the [Visionary project](https://github.com/visionary-be/visionary).   
+
+
+## License : GNU General Public License v3.0
+[Read the license](./COPYING).
+
 
 ## file organisation
 
